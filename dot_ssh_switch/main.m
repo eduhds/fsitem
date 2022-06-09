@@ -6,14 +6,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "profile_manager.h"
+#import "profile_manager.m"
 
 #define OPT_LIST @"list"
 #define SSH_PROFILE_FOLDER @"/ssh_profiles"
 #define SSH_FOLDER @".ssh"
 
 int main(int argc, const char * argv[]) {
-    @autoreleasepool {
+    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+    //@autoreleasepool {
         if (argc == 1) {
             printf("*** NO ARGUMENTS ***\n");
             printf("Use `list` argument to see all profiles or the profile name to change to it.\n");
@@ -70,6 +71,7 @@ int main(int argc, const char * argv[]) {
                 }
             }
         }
-    }
+    //}
+    [pool drain];
     return 0;
 }
