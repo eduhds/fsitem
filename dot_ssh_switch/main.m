@@ -53,6 +53,7 @@ int main(int argc, const char * argv[]) {
                     
                     if (createSuccess && changedSuccess) {
                         printf("*** NEW PROFILE CREATED ***\n");
+                        printf("Now you can use ssh-keygen to generate new key.\n");
                     } else {
                         printf("*** CREATE FAILED ***\n");
                     }

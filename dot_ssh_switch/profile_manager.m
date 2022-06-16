@@ -9,23 +9,25 @@
 #import "profile_manager.h"
 
 @implementation ProfileManager
-- (NSString *)currentPath{
-    NSFileManager *fileManager = [[NSFileManager alloc] init];
+- (id) init {
+    self = [super init];
+    fileManager = [[NSFileManager alloc] init];
+    return self;
+}
+
+- (NSString *) currentPath {
     return [fileManager currentDirectoryPath];
 }
 
-- (void)deleteItem:(NSString *)path{
-    NSFileManager *fileManager = [[NSFileManager alloc] init];
+- (void) deleteItem:(NSString *)path {
     [fileManager removeItemAtPath: path error: NULL];
 }
 
-- (bool)createLink:(NSString *)originPath destination:(NSString *)destinationPath{
-    NSFileManager *fileManager = [[NSFileManager alloc] init];
+- (bool) createLink:(NSString *)originPath destination:(NSString *)destinationPath {
     return [fileManager createSymbolicLinkAtPath: originPath withDestinationPath: destinationPath error: NULL];
 }
 
 - (void) listProfiles:(NSString *)path {
-    NSFileManager *fileManager = [[NSFileManager alloc] init];
     NSArray *list = [fileManager contentsOfDirectoryAtPath:path error:nil];
     
     if ([list count] > 0) {
@@ -33,16 +35,16 @@
         
         for (int i = 0; i < [list count]; i++) {
             NSString *profile = [list objectAtIndex: i];
-            if (![profile isEqualTo: @".DS_Store"])
-                NSLog(@"%@", profile);
+            if (![profile isEqualTo: @".DS_Store"]) {
+                printf("%d) %s\n", i + 1, [profile UTF8String]);
+            }
         }
     } else {
         printf("*** NO SSH PROFILES ***\n");
     }
 }
 
-- (bool)isProfile:(NSString *)path argValue:(NSString *)value{
-    NSFileManager *fileManager = [[NSFileManager alloc] init];
+- (bool) isProfile:(NSString *)path argValue:(NSString *)value {
     NSArray *list = [fileManager contentsOfDirectoryAtPath: path error:nil];
     
     bool isProfile = NO;
@@ -58,8 +60,7 @@
     return isProfile;
 }
 
-- (bool)createProfile:(NSString *)path{
-    NSFileManager *fileManager = [[NSFileManager alloc] init];
+- (bool) createProfile:(NSString *)path {
     NSURL *dir = [NSURL fileURLWithPath: path];
     
     bool created = [fileManager createDirectoryAtURL:dir withIntermediateDirectories:YES attributes:nil error:nil];

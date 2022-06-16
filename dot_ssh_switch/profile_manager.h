@@ -13,7 +13,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ProfileManager : NSObject
+@interface ProfileManager : NSObject {
+    NSFileManager *fileManager;
+}
 - (NSString *) currentPath;
 - (void) deleteItem: (NSString *) path;
 - (bool) createLink: (NSString *) originPath destination: (NSString *) destinationPath;
