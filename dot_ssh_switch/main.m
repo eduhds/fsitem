@@ -9,7 +9,7 @@
 #import "profile_manager.h"
 
 #define OPT_LIST @"list"
-#define SSH_PROFILE_FOLDER @"/ssh_profiles"
+#define SSH_PROFILE_FOLDER @"/.dot_ssh_profiles"
 #define SSH_FOLDER @".ssh"
 
 int main(int argc, const char * argv[]) {
