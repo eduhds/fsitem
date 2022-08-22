@@ -2,3 +2,6 @@
 xcuserdata
 dot_ssh_switch.d
 bin
+
+AppDir
+appimage-build
