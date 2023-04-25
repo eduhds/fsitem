@@ -1,6 +1,6 @@
-# fsitem
+# FsItem
 
-CLI tool for manage multiple folders with diferent ssh keys in .ssh folder.
+CLI tool for manage file system items (files and directories).
 
 ## For MacOS open and build with XCode
 
@@ -11,9 +11,15 @@ sudo apt install gnustep gnustep-devel
 
 . /usr/share/GNUstep/Makefiles/GNUstep.sh
 
-cd ./fsitem
+mkdir -p AppDir/usr/bin && gcc fsitem/*.m `gnustep-config --objc-flags` \
+    -lobjc -lgnustep-base -std=c11 -O3 \
+    -o AppDir/usr/bin/fsitem
 
-gcc main.m profile_manager.m `gnustep-config --objc-flags` -lobjc -lgnustep-base -std=c11 -o fsitem
+appimage-builder --recipe AppImageBuilder.yml
+
+sudo mv FsItem-0.0.1-x86_64.AppImage /usr/bin/fsitem
+
+sudo chmod +x /usr/bin/fsitem
 ```
 
 ## Usage
@@ -21,13 +27,8 @@ gcc main.m profile_manager.m `gnustep-config --objc-flags` -lobjc -lgnustep-base
 Move fsitem to home.
 
 ```bash
-cd ~
 
-# Create a profile or change to it if already exists
-./fsitem <profile_name>
+# See Options
+./fsitem
 
-# List all profiles
-./fsitem list
 ```
-
-After create a new profile, use `ssh-keygen` to generate new keys.
