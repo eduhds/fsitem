@@ -1,7 +1,10 @@
 .DS_Store
 xcuserdata
-fsitem.d
+
 bin
 
 AppDir
 appimage-build
+
+*.AppImage
+*.AppImage.zsync
