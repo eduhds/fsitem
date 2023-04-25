@@ -17,7 +17,7 @@
 }
 
 - (NSString *)getHomePath {
-    NSString *home = @(getenv("HOME"));
+    NSString *home = [NSString stringWithUTF8String:getenv("HOME")];
     return home;
 }
 

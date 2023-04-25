@@ -46,7 +46,8 @@ int main(int argc, const char * argv[]) {
                             NSInteger fileNameSize = [fileName count];
                             
                             if (fileNameSize > 1) {
-                                NSString *extension = [@"." stringByAppendingString:fileName[fileNameSize -1]];
+                                NSString *lastIem = (NSString *)[fileName objectAtIndex:fileNameSize -1];
+                                NSString *extension = [@"." stringByAppendingString:lastIem];
                                 sufix = [sufix stringByAppendingString:extension];
                                 arg2 = [arg2 stringByReplacingOccurrencesOfString:extension withString:@""];
                                 
