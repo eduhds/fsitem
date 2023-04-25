@@ -1,0 +1,72 @@
+# appimage-builder recipe see https://appimage-builder.readthedocs.io for details
+version: 1
+AppDir:
+  path: /home/eduardo/Desktop/Projetos/fsitem/AppDir
+  app_info:
+    id: com.eduhds.fsitem
+    name: FsItem
+    icon: application-vnd.appimage
+    version: 0.0.1
+    exec: usr/bin/fsitem
+    exec_args: $@
+  apt:
+    arch:
+    - amd64
+    allow_unauthenticated: true
+    sources:
+    - sourceline: deb http://us.archive.ubuntu.com/ubuntu/ jammy main restricted
+    - sourceline: deb http://us.archive.ubuntu.com/ubuntu/ jammy-updates main restricted
+    - sourceline: deb http://us.archive.ubuntu.com/ubuntu/ jammy universe
+    - sourceline: deb http://us.archive.ubuntu.com/ubuntu/ jammy-updates universe
+    - sourceline: deb http://us.archive.ubuntu.com/ubuntu/ jammy multiverse
+    - sourceline: deb http://us.archive.ubuntu.com/ubuntu/ jammy-updates multiverse
+    - sourceline: deb http://us.archive.ubuntu.com/ubuntu/ jammy-backports main restricted
+        universe multiverse
+    - sourceline: deb http://archive.canonical.com/ubuntu jammy partner
+    - sourceline: deb http://security.ubuntu.com/ubuntu jammy-security main restricted
+    - sourceline: deb http://security.ubuntu.com/ubuntu jammy-security universe
+    - sourceline: deb http://security.ubuntu.com/ubuntu jammy-security multiverse
+    - sourceline: deb [signed-by=/usr/share/keyrings/teamviewer-keyring.gpg] https://linux.teamviewer.com/deb
+        stable main
+    - sourceline: deb [arch=i386,amd64] http://linux.dropbox.com/ubuntu disco main
+    - sourceline: deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu   jammy
+        stable
+    - sourceline: deb http://repo.linuxliteos.com/linuxlite/ fluorite main
+    - sourceline: deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable
+        main
+    - sourceline: deb [arch=amd64] https://repo.vivaldi.com/stable/deb/ stable main
+    - sourceline: deb [arch=amd64,arm64,armhf] http://packages.microsoft.com/repos/code
+        stable main
+    - sourceline: deb [signed-by=/usr/share/keyrings/meganz-archive-keyring.gpg] https://mega.nz/linux/repo/xUbuntu_22.04/
+        ./
+    - sourceline: deb [signed-by=/usr/share/keyrings/dart.gpg arch=amd64] https://storage.googleapis.com/download.dartlang.org/linux/debian
+        stable main
+    include:
+    - libc6:amd64
+  files:
+    include: []
+    exclude:
+    - usr/share/man
+    - usr/share/doc/*/README.*
+    - usr/share/doc/*/changelog.*
+    - usr/share/doc/*/NEWS.*
+    - usr/share/doc/*/TODO.*
+  test:
+    fedora-30:
+      image: appimagecrafters/tests-env:fedora-30
+      command: ./AppRun
+    debian-stable:
+      image: appimagecrafters/tests-env:debian-stable
+      command: ./AppRun
+    archlinux-latest:
+      image: appimagecrafters/tests-env:archlinux-latest
+      command: ./AppRun
+    centos-7:
+      image: appimagecrafters/tests-env:centos-7
+      command: ./AppRun
+    ubuntu-xenial:
+      image: appimagecrafters/tests-env:ubuntu-xenial
+      command: ./AppRun
+AppImage:
+  arch: x86_64
+  update-information: guess
