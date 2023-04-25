@@ -28,7 +28,7 @@
 		A00FE5FF29E31B13001BD3AB /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		A00FE60029E31C63001BD3AB /* util.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
 		A00FE60229E3224C001BD3AB /* fs_item.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fs_item.m; sourceTree = "<group>"; };
-		A0847761284D3A4E00830BD1 /* dot_ssh_switch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = dot_ssh_switch; sourceTree = BUILT_PRODUCTS_DIR; };
+		A0847761284D3A4E00830BD1 /* fsitem */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fsitem; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0847764284D3A4E00830BD1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A0E7C5A929E20EEE003612F8 /* fs_item.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fs_item.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -47,7 +47,7 @@
 		A0847758284D3A4E00830BD1 = {
 			isa = PBXGroup;
 			children = (
-				A0847763284D3A4E00830BD1 /* dot_ssh_switch */,
+				A0847763284D3A4E00830BD1 /* fsitem */,
 				A0847762284D3A4E00830BD1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -55,12 +55,12 @@
 		A0847762284D3A4E00830BD1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A0847761284D3A4E00830BD1 /* dot_ssh_switch */,
+				A0847761284D3A4E00830BD1 /* fsitem */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A0847763284D3A4E00830BD1 /* dot_ssh_switch */ = {
+		A0847763284D3A4E00830BD1 /* fsitem */ = {
 			isa = PBXGroup;
 			children = (
 				A0847764284D3A4E00830BD1 /* main.m */,
@@ -69,15 +69,15 @@
 				A00FE5FF29E31B13001BD3AB /* util.h */,
 				A00FE60029E31C63001BD3AB /* util.m */,
 			);
-			path = dot_ssh_switch;
+			path = fsitem;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A0847760284D3A4E00830BD1 /* dot_ssh_switch */ = {
+		A0847760284D3A4E00830BD1 /* fsitem */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A0847768284D3A4E00830BD1 /* Build configuration list for PBXNativeTarget "dot_ssh_switch" */;
+			buildConfigurationList = A0847768284D3A4E00830BD1 /* Build configuration list for PBXNativeTarget "fsitem" */;
 			buildPhases = (
 				A084775D284D3A4E00830BD1 /* Sources */,
 				A084775E284D3A4E00830BD1 /* Frameworks */,
@@ -87,9 +87,9 @@
 			);
 			dependencies = (
 			);
-			name = dot_ssh_switch;
-			productName = dot_ssh_switch;
-			productReference = A0847761284D3A4E00830BD1 /* dot_ssh_switch */;
+			name = fsitem;
+			productName = fsitem;
+			productReference = A0847761284D3A4E00830BD1 /* fsitem */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -106,7 +106,7 @@
 					};
 				};
 			};
-			buildConfigurationList = A084775C284D3A4E00830BD1 /* Build configuration list for PBXProject "dot_ssh_switch" */;
+			buildConfigurationList = A084775C284D3A4E00830BD1 /* Build configuration list for PBXProject "fsitem" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -119,7 +119,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A0847760284D3A4E00830BD1 /* dot_ssh_switch */,
+				A0847760284D3A4E00830BD1 /* fsitem */,
 			);
 		};
 /* End PBXProject section */
@@ -274,7 +274,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A084775C284D3A4E00830BD1 /* Build configuration list for PBXProject "dot_ssh_switch" */ = {
+		A084775C284D3A4E00830BD1 /* Build configuration list for PBXProject "fsitem" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A0847766284D3A4E00830BD1 /* Debug */,
@@ -283,7 +283,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A0847768284D3A4E00830BD1 /* Build configuration list for PBXNativeTarget "dot_ssh_switch" */ = {
+		A0847768284D3A4E00830BD1 /* Build configuration list for PBXNativeTarget "fsitem" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A0847769284D3A4E00830BD1 /* Debug */,

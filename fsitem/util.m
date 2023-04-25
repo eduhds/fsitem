@@ -1,6 +1,6 @@
 //
 //  util.m
-//  dot_ssh_switch
+//  fsitem
 //
 //  Created by Eduardo Henrique on 09/04/23.
 //

@@ -1,6 +1,6 @@
 //
 //  fs_item.h
-//  dot_ssh_switch
+//  fsitem
 //
 //  Created by Eduardo Henrique on 08/04/23.
 //
