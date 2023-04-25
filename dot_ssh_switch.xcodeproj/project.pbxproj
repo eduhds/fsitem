@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A068A4FF284EBFE800752DE2 /* profile_manager.m in Sources */ = {isa = PBXBuildFile; fileRef = A068A4FE284EBFE800752DE2 /* profile_manager.m */; };
+		A00FE60129E31C63001BD3AB /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = A00FE60029E31C63001BD3AB /* util.m */; };
+		A00FE60329E3224C001BD3AB /* fs_item.m in Sources */ = {isa = PBXBuildFile; fileRef = A00FE60229E3224C001BD3AB /* fs_item.m */; };
 		A0847765284D3A4E00830BD1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A0847764284D3A4E00830BD1 /* main.m */; };
 /* End PBXBuildFile section */
 
@@ -24,10 +25,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		A068A4FD284EBF0800752DE2 /* profile_manager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = profile_manager.h; sourceTree = "<group>"; };
-		A068A4FE284EBFE800752DE2 /* profile_manager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = profile_manager.m; sourceTree = "<group>"; };
+		A00FE5FF29E31B13001BD3AB /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
+		A00FE60029E31C63001BD3AB /* util.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = util.m; sourceTree = "<group>"; };
+		A00FE60229E3224C001BD3AB /* fs_item.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fs_item.m; sourceTree = "<group>"; };
 		A0847761284D3A4E00830BD1 /* dot_ssh_switch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = dot_ssh_switch; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0847764284D3A4E00830BD1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A0E7C5A929E20EEE003612F8 /* fs_item.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fs_item.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,8 +64,10 @@
 			isa = PBXGroup;
 			children = (
 				A0847764284D3A4E00830BD1 /* main.m */,
-				A068A4FD284EBF0800752DE2 /* profile_manager.h */,
-				A068A4FE284EBFE800752DE2 /* profile_manager.m */,
+				A0E7C5A929E20EEE003612F8 /* fs_item.h */,
+				A00FE60229E3224C001BD3AB /* fs_item.m */,
+				A00FE5FF29E31B13001BD3AB /* util.h */,
+				A00FE60029E31C63001BD3AB /* util.m */,
 			);
 			path = dot_ssh_switch;
 			sourceTree = "<group>";
@@ -125,7 +130,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A0847765284D3A4E00830BD1 /* main.m in Sources */,
-				A068A4FF284EBFE800752DE2 /* profile_manager.m in Sources */,
+				A00FE60329E3224C001BD3AB /* fs_item.m in Sources */,
+				A00FE60129E31C63001BD3AB /* util.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,7 +254,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Y2P8TNSF29;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -259,7 +265,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Y2P8TNSF29;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
