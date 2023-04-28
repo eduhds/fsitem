@@ -62,7 +62,9 @@
 }
 
 -(bool)copyItem:(NSString *)fromPath toPath:(NSString *)copyPath {
-    bool copied = [fileManager copyItemAtPath:fromPath toPath:copyPath error:NULL];
+    NSError *error;
+    bool copied = [fileManager copyItemAtPath:fromPath toPath:copyPath error:&error];
+    if (!copied) printf("ERROR: %s", [[@"" stringByAppendingFormat:@"%@", error] UTF8String]);
     return copied;
 }
 
