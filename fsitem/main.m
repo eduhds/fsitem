@@ -8,16 +8,126 @@
 #import <Foundation/Foundation.h>
 #import "fs_item.h"
 #import "util.h"
+#import "libs/termbox2.h"
+#import "tui.h"
 
+#define APP_NAME @"fsitem"
 #define OPT_COPY @"-c"
 #define OPT_LINK @"-l"
 #define OPT_REPLACE @"-r"
 #define OPT_DELETE @"-d"
 
+#define ARROW_UP_KEY 65517
+#define ARROW_DOWN_KEY 65516
+
+NSArray *teste1 = @[@"exemplo1.env", @"exemplo2.env", @"exemplo3.env"];
+NSArray *teste2 = @[@"Lorem ipsum 1", @"Lorem ipsum 2", @"Lorem ipsum 3"];
+
+int focusIndex = 0;
+int selectedIndex = -1;
+
+void printScreen(int width, int height) {
+    // TOP
+    int topX = width / 2 - ((int)[APP_NAME length] / 2), topY = 0;
+    
+    tb_print(topX, topY++, TB_GREEN, 0, [[APP_NAME uppercaseString] UTF8String]);
+    tb_print(0, topY++, 0, 0, [[Tui line:width] UTF8String]);
+    
+    // LEFT
+    int leftX = 0, leftY = topY;
+    int leftW = width / 2;
+    int focusW = leftW - 1;
+
+    for (int i = 0; i < [teste1 count]; i++) {
+        NSString *item = [teste1 objectAtIndex:i];
+
+        NSString *brackets = i == selectedIndex ? @"[*] " : @"[ ] ";
+        
+        item = [brackets stringByAppendingFormat: @"%@", item];
+        
+        if (i == focusIndex) {
+            tb_printf(leftX, leftY++, 0, TB_RED, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
+        } else {
+            tb_printf(leftX, leftY++, 0, 0, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
+        }
+    }
+    
+    // MIDDLE
+    int middleX = leftW - 1, middleY = topY;
+    
+    for (int i = middleY; i < height; i++) {
+        tb_print(middleX, i, 0, 0, "│");
+    }
+    
+    // RIGHT
+    int rightX = middleX + 1, rightY = topY;
+    int rightW = width - leftW;
+    
+    NSString *rightText = [teste2 objectAtIndex:focusIndex];
+    tb_print(rightX, rightY, 0, 0, [rightText UTF8String]);
+    
+    // BOTTOM
+    int bottomX = 0, bottomY = height - 1;
+    tb_print(bottomX, bottomY, 0, TB_BLUE, [[Tui text:@" " maxWidth:width] UTF8String]);
+    
+    tb_present();
+}
+
+int nextFocusIndex(int currentIndex, int totalItems, BOOL toDown) {
+    return toDown
+        ? currentIndex < totalItems - 1 ? currentIndex + 1 : 0
+        : currentIndex > 0 ? currentIndex - 1 : totalItems - 1;
+}
+
 int main(int argc, const char * argv[]) {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     
-    NSString *arg1, *arg2, *arg3;
+    struct tb_event ev;
+    
+    tb_init();
+    
+    int height = tb_height();
+    int width = tb_width();
+    
+    printScreen(width, height);
+
+    while (true) {
+        tb_poll_event(&ev);
+        
+        // Exit on ESC or Ctrl+C
+        if (ev.key == 3 || ev.key == 27) {
+            tb_shutdown();
+            break;
+        }
+        
+        // Resize window
+        if (ev.type == TB_EVENT_RESIZE) {
+            width = ev.w;
+            height = ev.h;
+            tb_clear();
+            printScreen(width, height);
+        }
+        
+        // Move focus
+        if (ev.key == ARROW_UP_KEY || ev.key == ARROW_DOWN_KEY) {
+            focusIndex = nextFocusIndex(focusIndex, (int)[teste1 count], ev.key == ARROW_DOWN_KEY);
+            tb_clear();
+            printScreen(width, height);
+        }
+        
+        // Select item
+        if (ev.ch == 32) {
+            selectedIndex = focusIndex;
+            tb_clear();
+            printScreen(width, height);
+        }
+        
+        tb_printf(0, height - 1, 0, TB_BLUE, "                                ");
+        tb_printf(0, height - 1, 0, TB_BLUE, "%d %d %d", ev.type, ev.key, ev.ch);
+        tb_present();
+    }
+    
+    /*NSString *arg1, *arg2, *arg3;
     FSItem *fsItem = [[FSItem alloc] init];
     Util *util = [[Util alloc] init];
     
@@ -97,7 +207,7 @@ int main(int argc, const char * argv[]) {
         default:
             printf("---\nOpção inválida.\n---\n");
             break;
-    }
+    }*/
 
     [pool drain];
 
