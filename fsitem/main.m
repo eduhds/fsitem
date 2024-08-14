@@ -20,13 +20,10 @@
 #define ARROW_UP_KEY 65517
 #define ARROW_DOWN_KEY 65516
 
-NSArray *teste1 = @[@"exemplo1.env", @"exemplo2.env", @"exemplo3.env"];
-NSArray *teste2 = @[@"Lorem ipsum 1", @"Lorem ipsum 2", @"Lorem ipsum 3"];
-
 int focusIndex = 0;
 int selectedIndex = -1;
 
-void printScreen(int width, int height) {
+void printScreen(int width, int height, NSArray *teste1, NSArray *teste2) {
     // TOP
     int topX = width / 2 - ((int)[APP_NAME length] / 2), topY = 0;
     
@@ -41,12 +38,12 @@ void printScreen(int width, int height) {
     for (int i = 0; i < [teste1 count]; i++) {
         NSString *item = [teste1 objectAtIndex:i];
 
-        NSString *brackets = i == selectedIndex ? @"[*] " : @"[ ] ";
+        NSString *brackets = i == selectedIndex ? @"[✔] " : @"[ ] ";
         
         item = [brackets stringByAppendingFormat: @"%@", item];
         
         if (i == focusIndex) {
-            tb_printf(leftX, leftY++, 0, TB_RED, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
+            tb_printf(leftX, leftY++, 0, TB_GREEN, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
         } else {
             tb_printf(leftX, leftY++, 0, 0, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
         }
@@ -81,15 +78,18 @@ int nextFocusIndex(int currentIndex, int totalItems, BOOL toDown) {
 
 int main(int argc, const char * argv[]) {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-    
+
+    NSArray *teste1 = [[NSArray alloc] initWithObjects: @"exemplo1.env", @"exemplo2.env", @"exemplo3.env", nil];
+    NSArray *teste2 = [[NSArray alloc] initWithObjects: @"Lorem ipsum 1", @"Lorem ipsum 2", @"Lorem ipsum 3", nil];
+
     struct tb_event ev;
     
     tb_init();
     
     int height = tb_height();
     int width = tb_width();
-    
-    printScreen(width, height);
+
+    printScreen(width, height, teste1, teste2);
 
     while (true) {
         tb_poll_event(&ev);
@@ -105,21 +105,21 @@ int main(int argc, const char * argv[]) {
             width = ev.w;
             height = ev.h;
             tb_clear();
-            printScreen(width, height);
+            printScreen(width, height, teste1, teste2);
         }
         
         // Move focus
         if (ev.key == ARROW_UP_KEY || ev.key == ARROW_DOWN_KEY) {
             focusIndex = nextFocusIndex(focusIndex, (int)[teste1 count], ev.key == ARROW_DOWN_KEY);
             tb_clear();
-            printScreen(width, height);
+            printScreen(width, height, teste1, teste2);
         }
         
         // Select item
         if (ev.ch == 32) {
-            selectedIndex = focusIndex;
+            selectedIndex = selectedIndex == focusIndex ? -1 : focusIndex;
             tb_clear();
-            printScreen(width, height);
+            printScreen(width, height, teste1, teste2);
         }
         
         tb_printf(0, height - 1, 0, TB_BLUE, "                                ");
