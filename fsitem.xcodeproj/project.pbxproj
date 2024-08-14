@@ -37,6 +37,7 @@
 		A0B3DE5E2C6574E9005AB2BE /* termbox2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = termbox2.h; sourceTree = "<group>"; };
 		A0B3DE5F2C65756F005AB2BE /* termbox2.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = termbox2.c; sourceTree = "<group>"; };
 		A0E7C5A929E20EEE003612F8 /* fs_item.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fs_item.h; sourceTree = "<group>"; };
+		A0EF3FAD2C6D595B00935D44 /* argparse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = argparse.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +78,7 @@
 				A00FE60029E31C63001BD3AB /* util.m */,
 				A02A61582C66BDC000B7B8F8 /* tui.m */,
 				A02A615A2C66C1F500B7B8F8 /* tui.h */,
+				A0EF3FAD2C6D595B00935D44 /* argparse.h */,
 			);
 			path = fsitem;
 			sourceTree = "<group>";

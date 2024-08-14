@@ -6,12 +6,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "argparse.h"
 #import "fs_item.h"
 #import "util.h"
 #import "libs/termbox2.h"
 #import "tui.h"
 
 #define APP_NAME @"fsitem"
+#define APP_VERSION @"1.0.0"
+#define APP_DESCRIPTION @"fsitem"
 #define OPT_COPY @"-c"
 #define OPT_LINK @"-l"
 #define OPT_REPLACE @"-r"
@@ -58,7 +61,7 @@ void printScreen(int width, int height, NSArray *teste1, NSArray *teste2) {
     
     // RIGHT
     int rightX = middleX + 1, rightY = topY;
-    int rightW = width - leftW;
+    //int rightW = width - leftW;
     
     NSString *rightText = [teste2 objectAtIndex:focusIndex];
     tb_print(rightX, rightY, 0, 0, [rightText UTF8String]);
@@ -78,8 +81,18 @@ int nextFocusIndex(int currentIndex, int totalItems, BOOL toDown) {
 
 int main(int argc, const char * argv[]) {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+    
+    Argparse *argparse = [[Argparse alloc] initWithName:APP_NAME withVersion:APP_VERSION withDescription:APP_DESCRIPTION];
+    
+    BOOL argsOk = [argparse parse:argc withArgv:argv];
+    
+    if (!argsOk) {
+        exit(1);
+    }
+    
+    NSString *arg1 = [argparse argAtIndex:0];
 
-    NSArray *teste1 = [[NSArray alloc] initWithObjects: @"exemplo1.env", @"exemplo2.env", @"exemplo3.env", nil];
+    NSArray *teste1 = [[NSArray alloc] initWithObjects: arg1, @"exemplo2.env", @"exemplo3.env", nil];
     NSArray *teste2 = [[NSArray alloc] initWithObjects: @"Lorem ipsum 1", @"Lorem ipsum 2", @"Lorem ipsum 3", nil];
 
     struct tb_event ev;
