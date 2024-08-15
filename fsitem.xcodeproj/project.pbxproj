@@ -54,7 +54,7 @@
 		A0847758284D3A4E00830BD1 = {
 			isa = PBXGroup;
 			children = (
-				A0847763284D3A4E00830BD1 /* fsitem */,
+				A0847763284D3A4E00830BD1 /* src */,
 				A0847762284D3A4E00830BD1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -67,7 +67,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A0847763284D3A4E00830BD1 /* fsitem */ = {
+		A0847763284D3A4E00830BD1 /* src */ = {
 			isa = PBXGroup;
 			children = (
 				A0B3DE5D2C657328005AB2BE /* libs */,
@@ -80,7 +80,7 @@
 				A02A615A2C66C1F500B7B8F8 /* tui.h */,
 				A0EF3FAD2C6D595B00935D44 /* argparse.h */,
 			);
-			path = fsitem;
+			path = src;
 			sourceTree = "<group>";
 		};
 		A0B3DE5D2C657328005AB2BE /* libs */ = {
