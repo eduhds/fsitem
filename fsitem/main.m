@@ -26,7 +26,24 @@
 int focusIndex = 0;
 int selectedIndex = -1;
 
-void printScreen(int width, int height, NSArray *teste1, NSArray *teste2) {
+@interface ScreenManager : NSObject {
+    int width; // int _width;
+    int height; // int _height;
+}
+
+@property (nonatomic) int width; // Number of characters
+@property (nonatomic) int height; // Number of lines
+
+@end
+
+@implementation ScreenManager
+
+@synthesize width; // @synthesize width = _width;
+@synthesize height; // @synthesize height = _height;
+
+@end
+
+void printScreen(int width, int height, NSArray *teste1, NSArray *teste2, NSString *target, NSString *typed) {
     // TOP
     int topX = width / 2 - ((int)[APP_NAME length] / 2), topY = 0;
     
@@ -35,25 +52,36 @@ void printScreen(int width, int height, NSArray *teste1, NSArray *teste2) {
     
     // LEFT
     int leftX = 0, leftY = topY;
-    int leftW = width / 2;
-    int focusW = leftW - 1;
+    int leftW = (width / 2) - 1;
+    int focusW = leftW;
 
-    for (int i = 0; i < [teste1 count]; i++) {
-        NSString *item = [teste1 objectAtIndex:i];
+    tb_printf(leftX, leftY++, 0, 0, "%s", [[@"🞋 " stringByAppendingString: target] UTF8String]);
+    tb_print(leftX, leftY++, 0, 0, [[Tui line:leftW] UTF8String]);
 
-        NSString *brackets = i == selectedIndex ? @"[✔] " : @"[ ] ";
-        
-        item = [brackets stringByAppendingFormat: @"%@", item];
-        
-        if (i == focusIndex) {
-            tb_printf(leftX, leftY++, 0, TB_GREEN, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
-        } else {
-            tb_printf(leftX, leftY++, 0, 0, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
+    if ([teste1 count] > 0) {
+        for (int i = 0; i < [teste1 count]; i++) {
+            NSString *item = [teste1 objectAtIndex:i];
+
+            NSString *brackets = i == selectedIndex ? @"[✔] " : @"[ ] ";
+            
+            item = [brackets stringByAppendingFormat: @"%@", item];
+            
+            if (i == focusIndex) {
+                tb_printf(leftX, leftY++, 0, TB_GREEN, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
+            } else {
+                tb_printf(leftX, leftY++, 0, 0, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
+            }
         }
+    } else {
+        tb_print(leftX, leftY++, 0, 0, [[Tui text:@"Nenhum item encontrado" maxWidth:focusW] UTF8String]);
     }
+
+    tb_print(leftX, height - 4, 0, 0, [[Tui line:leftW] UTF8String]);
+    tb_print(leftX, height - 3, 0, 0, [[@"> " stringByAppendingFormat:@"%@|", typed] UTF8String]);
+    tb_print(leftX, height - 2, 0, 0, [[Tui text:@"" maxWidth:leftW] UTF8String]);
     
     // MIDDLE
-    int middleX = leftW - 1, middleY = topY;
+    int middleX = leftW, middleY = topY;
     
     for (int i = middleY; i < height; i++) {
         tb_print(middleX, i, 0, 0, "│");
@@ -89,10 +117,25 @@ int main(int argc, const char * argv[]) {
     if (!argsOk) {
         exit(1);
     }
-    
-    NSString *arg1 = [argparse argAtIndex:0];
 
-    NSArray *teste1 = [[NSArray alloc] initWithObjects: arg1, @"exemplo2.env", @"exemplo3.env", nil];
+    Util *util = [[Util alloc] init];
+    
+    NSString *target = [argparse argAtIndex:0];
+    NSNumber *areaFocus = [NSNumber numberWithInt:0];
+    NSString *typed = [[NSString alloc] init];
+
+    if ([util pathExists:target]) {
+        if ([util pathIsDirectory:target]) {
+            printf("Directory is not supported.\n");
+            exit(1);
+        }
+    } else {
+        printf("Target file not found.\n");
+        exit(1);
+    }
+
+    //NSArray *teste1 = [[NSArray alloc] init];
+    NSArray *teste1 = [[NSArray alloc] initWithObjects: @"Lorem ipsum 1", @"Lorem ipsum 2", @"Lorem ipsum 3", nil];
     NSArray *teste2 = [[NSArray alloc] initWithObjects: @"Lorem ipsum 1", @"Lorem ipsum 2", @"Lorem ipsum 3", nil];
 
     struct tb_event ev;
@@ -102,7 +145,13 @@ int main(int argc, const char * argv[]) {
     int height = tb_height();
     int width = tb_width();
 
-    printScreen(width, height, teste1, teste2);
+    ScreenManager *sm = [[ScreenManager alloc] init];
+    [sm setWidth:width];
+    [sm setHeight:height];
+
+    printScreen(width, height, teste1, teste2, target, [NSString stringWithFormat:@"%d-%d", [sm width], [sm height]]);
+    
+    tb_present();
 
     while (true) {
         tb_poll_event(&ev);
@@ -118,21 +167,43 @@ int main(int argc, const char * argv[]) {
             width = ev.w;
             height = ev.h;
             tb_clear();
-            printScreen(width, height, teste1, teste2);
+            printScreen(width, height, teste1, teste2, target, typed);
+        }
+
+        // Tab pressed
+        if (ev.key == 9) {
+            areaFocus = [areaFocus intValue] == 0 ? [NSNumber numberWithInt:1] : [NSNumber numberWithInt:0];
         }
         
-        // Move focus
-        if (ev.key == ARROW_UP_KEY || ev.key == ARROW_DOWN_KEY) {
-            focusIndex = nextFocusIndex(focusIndex, (int)[teste1 count], ev.key == ARROW_DOWN_KEY);
+        if ([areaFocus intValue] == 0) {
+            // Move focus
+            if (ev.key == ARROW_UP_KEY || ev.key == ARROW_DOWN_KEY) {
+                focusIndex = nextFocusIndex(focusIndex, (int)[teste1 count], ev.key == ARROW_DOWN_KEY);
+            }
+
+            // Select item
+            if (ev.ch == 32) {
+                selectedIndex = selectedIndex == focusIndex ? -1 : focusIndex;    
+            }
+
             tb_clear();
-            printScreen(width, height, teste1, teste2);
+            printScreen(width, height, teste1, teste2, target, typed);
         }
         
-        // Select item
-        if (ev.ch == 32) {
-            selectedIndex = selectedIndex == focusIndex ? -1 : focusIndex;
+        if ([areaFocus intValue] == 1) {
+            // Type
+            if (ev.key == 0 && ev.ch != 0) {
+                typed = [typed stringByAppendingString:[NSString stringWithFormat:@"%c", ev.ch]];    
+            }
+
+            if (ev.key == 127) {
+                if ([typed length] > 0) {   
+                    typed = [typed substringToIndex:[typed length] - 1];
+                }
+            }
+
             tb_clear();
-            printScreen(width, height, teste1, teste2);
+            printScreen(width, height, teste1, teste2, target, typed);
         }
         
         tb_printf(0, height - 1, 0, TB_BLUE, "                                ");

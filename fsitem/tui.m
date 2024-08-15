@@ -12,7 +12,7 @@
 + (NSString *) line: (int) length {
     NSString *line = @"";
     for (int i = 0; i < length; i++) {
-        line = [line stringByAppendingString:@"──"];
+        line = [line stringByAppendingString:@"─"];
     }
     return line;
 }
