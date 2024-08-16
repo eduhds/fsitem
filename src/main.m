@@ -176,6 +176,12 @@ int main(int argc, const char * argv[]) {
         exit(1);
     }
 
+    // TODO:
+    // Ver se target ja configurada
+    // Listar items
+    // Verificar item selecionado
+    // Criar nova
+
     Util *util = [[Util alloc] init];
     
     Target *target = [[Target alloc] init];
