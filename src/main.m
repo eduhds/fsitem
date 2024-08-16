@@ -43,6 +43,9 @@
     int focusIndex;
     int selectedIndex;
     Target *target;
+    NSString *content;
+    NSString *typed;
+    NSNumber *areaFocus;
 }
 
 @property (nonatomic) int width; // Number of characters
@@ -50,8 +53,11 @@
 @property (nonatomic) int focusIndex;
 @property (nonatomic) int selectedIndex;
 @property (nonatomic, retain) Target *target;
+@property (nonatomic, retain) NSString *content;
+@property (nonatomic, retain) NSString *typed;
+@property (nonatomic, retain) NSNumber *areaFocus;
 
-- (void) printScreen: (Target *) target withContent: (NSString *) teste2 withTyped: (NSString *) typed;
+- (void) printScreen;
 
 @end
 
@@ -62,24 +68,33 @@
 @synthesize focusIndex;
 @synthesize selectedIndex;
 @synthesize target;
+@synthesize content;
+@synthesize typed;
+@synthesize areaFocus;
 
 - (id) init {
     self = [super init];
     self.focusIndex = 0;
     self.selectedIndex = -1;
+    self.content = [[NSString alloc] init];
+    self.typed = [[NSString alloc] init];
+    self.areaFocus = [NSNumber numberWithInt:0];
     return self;
 }
 
-- (id) initWithWidth: (int) width andHeight: (int) height {
+- (id) initWithWidth: (int) w andHeight: (int) h {
     self = [super init];
-    self.width = width;
-    self.height = height;
+    self.width = w;
+    self.height = h;
     self.focusIndex = 0;
     self.selectedIndex = -1;
+    self.content = [[NSString alloc] init];
+    self.typed = [[NSString alloc] init];
+    self.areaFocus = [NSNumber numberWithInt:0];
     return self;
 }
 
-- (void) printScreen: (Target *) target withContent:(NSString *)teste2 withTyped:(NSString *)typed {
+- (void) printScreen {
     tb_clear();
 
     // TOP
@@ -93,7 +108,7 @@
     int leftW = (width / 2) - 1;
     int focusW = leftW;
 
-    tb_printf(leftX, leftY++, 0, 0, "%s", [[@"🞋 " stringByAppendingString: [target name]] UTF8String]);
+    tb_printf(leftX, leftY++, 0, 0, "%s", [[@"⮚ " stringByAppendingString: [target name]] UTF8String]);
     tb_print(leftX, leftY++, 0, 0, [[Tui line:leftW] UTF8String]);
 
     NSArray *targetItems = [target items];
@@ -106,10 +121,12 @@
             
             item = [brackets stringByAppendingFormat: @"%@", item];
             
-            if (i == focusIndex) {
-                tb_printf(leftX, leftY++, 0, TB_GREEN, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
+            int focusY = leftY++;
+            if ([areaFocus intValue] == 0 && i == focusIndex) {
+                tb_printf(leftX, focusY, 0, TB_GREEN, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
+                tb_print(focusW -2, focusY, 0, TB_GREEN, "▶");
             } else {
-                tb_printf(leftX, leftY++, 0, 0, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
+                tb_printf(leftX, focusY, 0, 0, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
             }
         }
     } else {
@@ -117,8 +134,14 @@
     }
 
     tb_print(leftX, height - 4, 0, 0, [[Tui line:leftW] UTF8String]);
-    tb_print(leftX, height - 3, 0, 0, [[@"> " stringByAppendingFormat:@"%@|", typed] UTF8String]);
+    tb_print(leftX, height - 3, 0, 0, [typed UTF8String]);
     tb_print(leftX, height - 2, 0, 0, [[Tui text:@"" maxWidth:leftW] UTF8String]);
+
+    if ([areaFocus intValue] == 1) {
+        tb_set_cursor([typed length], height - 3);
+    } else {
+        tb_hide_cursor();
+    }
     
     // MIDDLE
     int middleX = leftW, middleY = topY;
@@ -131,7 +154,7 @@
     int rightX = middleX + 1, rightY = topY;
     //int rightW = width - leftW;
     
-    tb_print(rightX, rightY, 0, 0, [teste2 UTF8String]);
+    tb_print(rightX, rightY, 0, 0, [content UTF8String]);
     
     // BOTTOM
     int bottomX = 0, bottomY = height - 1;
@@ -167,9 +190,7 @@ int main(int argc, const char * argv[]) {
         printf("Target file not found.\n");
         exit(1);
     }
-    
-    NSNumber *areaFocus = [NSNumber numberWithInt:0];
-    NSString *typed = [[NSString alloc] init];
+
     NSArray *exampleItems = [[NSArray alloc] initWithObjects: @"Lorem ipsum 1", @"Lorem ipsum 2", @"Lorem ipsum 3", nil];
 
     [target setItems:exampleItems];
@@ -181,8 +202,9 @@ int main(int argc, const char * argv[]) {
     ScreenManager *sm = [[ScreenManager alloc] init];
     [sm setWidth:tb_width()];
     [sm setHeight:tb_height()];
+    [sm setTarget:target];
     
-    [sm printScreen:target withContent:@"" withTyped:@""];
+    [sm printScreen];
 
     while (true) {
         tb_poll_event(&ev);
@@ -197,15 +219,14 @@ int main(int argc, const char * argv[]) {
         if (ev.type == TB_EVENT_RESIZE) {
             [sm setWidth:ev.w];
             [sm setHeight:ev.h];
-            [sm printScreen:target withContent:@"" withTyped: typed];
         }
 
         // Tab pressed
-        if (ev.key == 9) {
-            areaFocus = [areaFocus intValue] == 0 ? [NSNumber numberWithInt:1] : [NSNumber numberWithInt:0];
+        if (ev.key == TB_KEY_TAB) {
+            [sm setAreaFocus: [[sm areaFocus] intValue] == 0 ? [NSNumber numberWithInt:1] : [NSNumber numberWithInt:0]];
         }
         
-        if ([areaFocus intValue] == 0) {
+        if ([[sm areaFocus] intValue] == 0) {
             // Move focus
             if (ev.key == TB_KEY_ARROW_UP || ev.key == TB_KEY_ARROW_DOWN) {
                 int currentIndex = [sm focusIndex];
@@ -221,26 +242,24 @@ int main(int argc, const char * argv[]) {
             if (ev.ch == TB_KEY_SPACE) {
                 [sm setSelectedIndex: [sm selectedIndex] == [sm focusIndex] ? -1 : [sm focusIndex]];
             }
-
-            [sm printScreen:target withContent:@"" withTyped: typed];
         }
         
-        if ([areaFocus intValue] == 1) {
+        if ([[sm areaFocus] intValue] == 1) {
             // Type
             if (ev.key == 0 && ev.ch != 0) {
-                typed = [typed stringByAppendingString:[NSString stringWithFormat:@"%c", ev.ch]];
+                [sm setTyped: [[sm typed] stringByAppendingString:[NSString stringWithFormat:@"%c", ev.ch]]];
             }
 
             // Delete
-            if (ev.key == TB_KEY_BACKSPACE) {
-                if ([typed length] > 0) {
-                    typed = [typed substringToIndex:[typed length] - 1];
+            if (ev.key == TB_KEY_BACKSPACE || ev.key == TB_KEY_BACKSPACE2) {
+                if ([[sm typed] length] > 0) {
+                    [sm setTyped: [[sm typed] substringToIndex:[[sm typed] length] - 1]];
                 }
             }
-
-            [sm printScreen:target withContent:@"" withTyped: typed];
         }
-        
+
+        [sm printScreen];
+
         tb_printf(0, [sm height] - 1, 0, TB_BLUE, "                                ");
         tb_printf(0, [sm height] - 1, 0, TB_BLUE, "%d %d %d", ev.type, ev.key, ev.ch);
         tb_present();
