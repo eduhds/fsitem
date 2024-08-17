@@ -6,189 +6,34 @@
 //
 
 #import <Foundation/Foundation.h>
+
+#import "libs/termbox2.h"
 #import "argparse.h"
 #import "fs_item.h"
 #import "util.h"
-#import "libs/termbox2.h"
-#import "tui.h"
+#import "screen_manager.h"
+#import "switch_config.h"
 
 #define APP_NAME @"fsitem"
 #define APP_VERSION @"1.0.0"
 #define APP_DESCRIPTION @"fsitem"
-#define OPT_COPY @"-c"
-#define OPT_LINK @"-l"
-#define OPT_REPLACE @"-r"
-#define OPT_DELETE @"-d"
-
-@interface Target : NSObject {
-    NSString *name;
-    NSArray *items;
-}
-
-@property (nonatomic, retain) NSString *name;
-@property (nonatomic, retain) NSArray *items;
-
-@end
-
-@implementation Target
-
-@synthesize name;
-@synthesize items;
-
-@end
-
-@interface ScreenManager : NSObject {
-    int width; // int _width;
-    int height; // int _height;
-    int focusIndex;
-    int selectedIndex;
-    Target *target;
-    NSString *content;
-    NSString *typed;
-    NSNumber *areaFocus;
-}
-
-@property (nonatomic) int width; // Number of characters
-@property (nonatomic) int height; // Number of lines
-@property (nonatomic) int focusIndex;
-@property (nonatomic) int selectedIndex;
-@property (nonatomic, retain) Target *target;
-@property (nonatomic, retain) NSString *content;
-@property (nonatomic, retain) NSString *typed;
-@property (nonatomic, retain) NSNumber *areaFocus;
-
-- (void) printScreen;
-
-@end
-
-@implementation ScreenManager
-
-@synthesize width; // @synthesize width = _width;
-@synthesize height; // @synthesize height = _height;
-@synthesize focusIndex;
-@synthesize selectedIndex;
-@synthesize target;
-@synthesize content;
-@synthesize typed;
-@synthesize areaFocus;
-
-- (id) init {
-    self = [super init];
-    self.focusIndex = 0;
-    self.selectedIndex = -1;
-    self.content = [[NSString alloc] init];
-    self.typed = [[NSString alloc] init];
-    self.areaFocus = [NSNumber numberWithInt:0];
-    return self;
-}
-
-- (id) initWithWidth: (int) w andHeight: (int) h {
-    self = [super init];
-    self.width = w;
-    self.height = h;
-    self.focusIndex = 0;
-    self.selectedIndex = -1;
-    self.content = [[NSString alloc] init];
-    self.typed = [[NSString alloc] init];
-    self.areaFocus = [NSNumber numberWithInt:0];
-    return self;
-}
-
-- (void) printScreen {
-    tb_clear();
-
-    // TOP
-    int topX = width / 2 - ((int)[APP_NAME length] / 2), topY = 0;
-    
-    tb_print(topX, topY++, TB_GREEN, 0, [[APP_NAME uppercaseString] UTF8String]);
-    tb_print(0, topY++, 0, 0, [[Tui line:width] UTF8String]);
-    
-    // LEFT
-    int leftX = 0, leftY = topY;
-    int leftW = (width / 2) - 1;
-    int focusW = leftW;
-
-    tb_printf(leftX, leftY++, 0, 0, "%s", [[@"⮚ " stringByAppendingString: [target name]] UTF8String]);
-    tb_print(leftX, leftY++, 0, 0, [[Tui line:leftW] UTF8String]);
-
-    NSArray *targetItems = [target items];
-    
-    if ([targetItems count] > 0) {
-        for (int i = 0; i < [targetItems count]; i++) {
-            NSString *item = [targetItems objectAtIndex:i];
-
-            NSString *brackets = i == selectedIndex ? @"[✔] " : @"[ ] ";
-            
-            item = [brackets stringByAppendingFormat: @"%@", item];
-            
-            int focusY = leftY++;
-            if ([areaFocus intValue] == 0 && i == focusIndex) {
-                tb_printf(leftX, focusY, 0, TB_GREEN, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
-                tb_print(focusW -2, focusY, 0, TB_GREEN, "▶");
-            } else {
-                tb_printf(leftX, focusY, 0, 0, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
-            }
-        }
-    } else {
-        tb_print(leftX, leftY++, 0, 0, [[Tui text:@"Nenhum item encontrado" maxWidth:focusW] UTF8String]);
-    }
-
-    tb_print(leftX, height - 4, 0, 0, [[Tui line:leftW] UTF8String]);
-    tb_print(leftX, height - 3, 0, 0, [typed UTF8String]);
-    tb_print(leftX, height - 2, 0, 0, [[Tui text:@"" maxWidth:leftW] UTF8String]);
-
-    if ([areaFocus intValue] == 1) {
-        tb_set_cursor([typed length], height - 3);
-    } else {
-        tb_hide_cursor();
-    }
-    
-    // MIDDLE
-    int middleX = leftW, middleY = topY;
-    
-    for (int i = middleY; i < height; i++) {
-        tb_print(middleX, i, 0, 0, "│");
-    }
-    
-    // RIGHT
-    int rightX = middleX + 1, rightY = topY;
-    //int rightW = width - leftW;
-    
-    tb_print(rightX, rightY, 0, 0, [content UTF8String]);
-    
-    // BOTTOM
-    int bottomX = 0, bottomY = height - 1;
-    tb_print(bottomX, bottomY, 0, TB_BLUE, [[Tui text:@" " maxWidth:width] UTF8String]);
-    
-    tb_present();
-}
-
-@end
 
 int main(int argc, const char * argv[]) {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     
-    Argparse *argparse = [[Argparse alloc] initWithName:APP_NAME withVersion:APP_VERSION withDescription:APP_DESCRIPTION];
+    Argparse *argparse = [[Argparse alloc] initWithName: APP_NAME withVersion: APP_VERSION withDescription: APP_DESCRIPTION];
     
-    BOOL argsOk = [argparse parse:argc withArgv:argv];
+    BOOL argsOk = [argparse parse: argc withArgv: argv];
     
     if (!argsOk) {
         exit(1);
     }
-
-    // TODO:
-    // Ver se target ja configurada
-    // Listar items
-    // Verificar item selecionado
-    // Criar nova
-
-    Util *util = [[Util alloc] init];
     
     Target *target = [[Target alloc] init];
-    [target setName:[argparse argAtIndex:0]];
+    [target setName: [argparse argAtIndex: 0]];
 
-    if ([util pathExists:[target name]]) {
-        if ([util pathIsDirectory:[target name]]) {
+    if ([SwitchConfig targetExists: target]) {
+        if ([SwitchConfig targetIsDirectory: target]) {
             printf("Directory is not supported.\n");
             exit(1);
         }
@@ -198,17 +43,23 @@ int main(int argc, const char * argv[]) {
     }
 
     NSArray *exampleItems = [[NSArray alloc] initWithObjects: @"Lorem ipsum 1", @"Lorem ipsum 2", @"Lorem ipsum 3", nil];
-
-    [target setItems:exampleItems];
+    BOOL hasConfig = NO;
     
+    if ([SwitchConfig targetHasConfig: target]) {
+        // TODO: Listar items
+        [target setItems: exampleItems];
+        hasConfig = YES;
+    }
+
     struct tb_event ev;
     
     tb_init();
 
     ScreenManager *sm = [[ScreenManager alloc] init];
-    [sm setWidth:tb_width()];
-    [sm setHeight:tb_height()];
-    [sm setTarget:target];
+    [sm setTitle: APP_NAME];
+    [sm setWidth: tb_width()];
+    [sm setHeight: tb_height()];
+    [sm setTarget: target];
     
     [sm printScreen];
 
@@ -262,12 +113,31 @@ int main(int argc, const char * argv[]) {
                     [sm setTyped: [[sm typed] substringToIndex:[[sm typed] length] - 1]];
                 }
             }
+            
+            // Enter
+            if (ev.key == TB_KEY_ENTER) {
+                if ([[sm typed] length] > 0) {
+                    // TODO: permitir nomes válidos
+                    
+                    if (!hasConfig) {
+                        hasConfig = [SwitchConfig makeConfigDir] && [SwitchConfig makeTargetConfig: target];
+                    }
+                    
+                    if (hasConfig && [SwitchConfig makeTargetItem: target withName: [sm typed]]) {
+                        tb_print([sm width] - 3, 0, TB_GREEN, 0, "OK");
+                        [sm setTyped: @""];
+                    } else {
+                        tb_print([sm width] - 3, 0, TB_RED, 0, "FAIL");
+                    }
+                }
+            }
         }
 
         [sm printScreen];
 
-        tb_printf(0, [sm height] - 1, 0, TB_BLUE, "                                ");
-        tb_printf(0, [sm height] - 1, 0, TB_BLUE, "%d %d %d", ev.type, ev.key, ev.ch);
+        // TODO: remover
+        tb_printf([sm width] - 10, [sm height] - 1, 0, TB_BLUE, "                                ");
+        tb_printf([sm width] - 10, [sm height] - 1, 0, TB_BLUE, "%d %d %d", ev.type, ev.key, ev.ch);
         tb_present();
     }
     

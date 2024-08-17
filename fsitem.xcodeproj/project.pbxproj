@@ -10,6 +10,8 @@
 		A00FE60129E31C63001BD3AB /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = A00FE60029E31C63001BD3AB /* util.m */; };
 		A00FE60329E3224C001BD3AB /* fs_item.m in Sources */ = {isa = PBXBuildFile; fileRef = A00FE60229E3224C001BD3AB /* fs_item.m */; };
 		A02A61592C66BDC000B7B8F8 /* tui.m in Sources */ = {isa = PBXBuildFile; fileRef = A02A61582C66BDC000B7B8F8 /* tui.m */; };
+		A06A3EB92C6FFCD000596C11 /* screen_manager.m in Sources */ = {isa = PBXBuildFile; fileRef = A06A3EB62C6FF6FE00596C11 /* screen_manager.m */; };
+		A06A3EBA2C6FFCD600596C11 /* switch_config.m in Sources */ = {isa = PBXBuildFile; fileRef = A06A3EB82C6FF8D000596C11 /* switch_config.m */; };
 		A0847765284D3A4E00830BD1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A0847764284D3A4E00830BD1 /* main.m */; };
 		A0B3DE602C65756F005AB2BE /* termbox2.c in Sources */ = {isa = PBXBuildFile; fileRef = A0B3DE5F2C65756F005AB2BE /* termbox2.c */; };
 /* End PBXBuildFile section */
@@ -32,6 +34,10 @@
 		A00FE60229E3224C001BD3AB /* fs_item.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fs_item.m; sourceTree = "<group>"; };
 		A02A61582C66BDC000B7B8F8 /* tui.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tui.m; sourceTree = "<group>"; };
 		A02A615A2C66C1F500B7B8F8 /* tui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tui.h; sourceTree = "<group>"; };
+		A06A3EB52C6FF6B000596C11 /* screen_manager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = screen_manager.h; sourceTree = "<group>"; };
+		A06A3EB62C6FF6FE00596C11 /* screen_manager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = screen_manager.m; sourceTree = "<group>"; };
+		A06A3EB72C6FF8B400596C11 /* switch_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = switch_config.h; sourceTree = "<group>"; };
+		A06A3EB82C6FF8D000596C11 /* switch_config.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = switch_config.m; sourceTree = "<group>"; };
 		A0847761284D3A4E00830BD1 /* fsitem */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fsitem; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0847764284D3A4E00830BD1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A0B3DE5E2C6574E9005AB2BE /* termbox2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = termbox2.h; sourceTree = "<group>"; };
@@ -79,6 +85,10 @@
 				A02A61582C66BDC000B7B8F8 /* tui.m */,
 				A02A615A2C66C1F500B7B8F8 /* tui.h */,
 				A0EF3FAD2C6D595B00935D44 /* argparse.h */,
+				A06A3EB52C6FF6B000596C11 /* screen_manager.h */,
+				A06A3EB62C6FF6FE00596C11 /* screen_manager.m */,
+				A06A3EB72C6FF8B400596C11 /* switch_config.h */,
+				A06A3EB82C6FF8D000596C11 /* switch_config.m */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -149,6 +159,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A06A3EBA2C6FFCD600596C11 /* switch_config.m in Sources */,
+				A06A3EB92C6FFCD000596C11 /* screen_manager.m in Sources */,
 				A0847765284D3A4E00830BD1 /* main.m in Sources */,
 				A00FE60329E3224C001BD3AB /* fs_item.m in Sources */,
 				A0B3DE602C65756F005AB2BE /* termbox2.c in Sources */,
