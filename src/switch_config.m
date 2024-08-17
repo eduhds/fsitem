@@ -18,8 +18,13 @@
 
 @implementation SwitchConfig
 
-- (id) init {
+@synthesize target;
+@synthesize config;
+
+- (instancetype) initWithTarget: (Target *) t {
     self = [super init];
+    target = t;
+    config = [NSString stringWithFormat: @"%@%@", [t name], CONFIG_EXT];
     return self;
 }
 
@@ -28,31 +33,55 @@
 }
 
 + (BOOL) makeConfigDir {
-    return [[NSFileManager defaultManager] createDirectoryAtPath: CONFIG_DIR withIntermediateDirectories: YES attributes: nil error: nil];
+    BOOL created = [[NSFileManager defaultManager] createDirectoryAtPath: CONFIG_DIR withIntermediateDirectories: YES attributes: nil error: nil];
+    if (created) {
+        NSString *path = [NSString stringWithFormat: @"%@/.gitignore", CONFIG_DIR];
+        if ([[NSFileManager defaultManager] createFileAtPath: path contents: nil attributes: nil]) {
+            NSString *content = @"*\n.*\n";
+            [content writeToFile: path atomically: YES encoding: NSUTF8StringEncoding error: nil];
+        }
+    }
+    return created;
 }
 
-+ (BOOL) targetExists: (Target *) t {
-    return [[NSFileManager defaultManager] fileExistsAtPath: [t name]];
+- (BOOL) targetExists {
+    return [[NSFileManager defaultManager] fileExistsAtPath: [target name]];
 }
 
-+ (BOOL) targetIsDirectory: (Target *) t {
+- (BOOL) targetIsDirectory {
     BOOL isDirectory = NO;
-    return [[NSFileManager defaultManager] fileExistsAtPath: [t name] isDirectory: &isDirectory] && isDirectory;
+    return [[NSFileManager defaultManager] fileExistsAtPath: [target name] isDirectory: &isDirectory] && isDirectory;
 }
 
-+ (BOOL) targetHasConfig: (Target *) t {
-    NSString *path = [NSString stringWithFormat: @"%@/%@%@", CONFIG_DIR, [t name], CONFIG_EXT];
+- (BOOL) targetHasConfig {
+    NSString *path = [NSString stringWithFormat: @"%@/%@", CONFIG_DIR, config];
     return [[NSFileManager defaultManager] fileExistsAtPath: path];
 }
 
-+ (BOOL) makeTargetConfig: (Target *) t {
-    NSString *path = [NSString stringWithFormat: @"%@/%@%@", CONFIG_DIR, [t name], CONFIG_EXT];
-    return [[NSFileManager defaultManager] createFileAtPath: path contents: nil attributes: nil];
+- (BOOL) makeTargetConfig {
+    NSString *path = [NSString stringWithFormat: @"%@/%@", CONFIG_DIR, config];
+    return [[NSFileManager defaultManager] copyItemAtPath: [target name] toPath: path error: nil];
 }
 
-+ (BOOL) makeTargetItem: (Target *) t withName: (NSString *) name {
-    NSString *path = [NSString stringWithFormat: @"%@/%@.%@", CONFIG_DIR, name, [t name]];
-    return [[NSFileManager defaultManager] createFileAtPath: path contents: nil attributes: nil];
+- (BOOL) makeTargetItem: (NSString *) name {
+    NSString *path = [NSString stringWithFormat: @"%@/%@|%@", CONFIG_DIR, name, [target name]];
+    return [[NSFileManager defaultManager] copyItemAtPath: [target name] toPath: path error: nil];
+}
+
+- (NSArray *)getTargetItems {
+    NSArray *items = [[NSFileManager defaultManager] contentsOfDirectoryAtPath: CONFIG_DIR error: nil];
+
+    items = [items filteredArrayUsingPredicate: [NSPredicate predicateWithBlock: ^BOOL(NSString *item, NSDictionary *bindings) {
+        return [item hasSuffix: [target name]];
+    }]];
+    
+    return items;
+}
+
+- (NSArray *) readItemContent: (NSString *) name {
+    NSString *path = [NSString stringWithFormat: @"%@/%@", CONFIG_DIR, name];
+    NSString *content = [NSString stringWithContentsOfFile: path encoding: NSUTF8StringEncoding error: nil];
+    return [content componentsSeparatedByString: @"\n"];
 }
 
 @end

@@ -19,8 +19,9 @@
     int selectedIndex;
     Target *target;
     NSString *title;
-    NSString *content;
+    NSArray *content;
     NSString *typed;
+    NSString *message;
     NSNumber *areaFocus;
 }
 
@@ -30,8 +31,9 @@
 @property (nonatomic) int selectedIndex;
 @property (nonatomic, retain) Target *target;
 @property (nonatomic, retain) NSString *title;
-@property (nonatomic, retain) NSString *content;
+@property (nonatomic, retain) NSArray *content;
 @property (nonatomic, retain) NSString *typed;
+@property (nonatomic, retain) NSString *message;
 @property (nonatomic, retain) NSNumber *areaFocus;
 
 - (void) printScreen;

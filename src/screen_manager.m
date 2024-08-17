@@ -21,6 +21,7 @@
 @synthesize title;
 @synthesize content;
 @synthesize typed;
+@synthesize message;
 @synthesize areaFocus;
 
 - (id) init {
@@ -28,8 +29,9 @@
     self.focusIndex = 0;
     self.selectedIndex = -1;
     self.title = [[NSString alloc] init];
-    self.content = [[NSString alloc] init];
+    self.content = [[NSArray alloc] init];
     self.typed = [[NSString alloc] init];
+    self.message = [[NSString alloc] init];
     self.areaFocus = [NSNumber numberWithInt:0];
     return self;
 }
@@ -56,6 +58,7 @@
     if ([targetItems count] > 0) {
         for (int i = 0; i < [targetItems count]; i++) {
             NSString *item = [targetItems objectAtIndex:i];
+            item = [item componentsSeparatedByString: @"|"][0];
 
             NSString *brackets = i == selectedIndex ? @"[✔] " : @"[ ] ";
             
@@ -94,11 +97,21 @@
     int rightX = middleX + 1, rightY = topY;
     //int rightW = width - leftW;
     
-    tb_print(rightX, rightY, 0, 0, [content UTF8String]);
+    if ([content count] > 0) {
+        for (int i = 0; i < [content count]; i++) {
+            NSString *item = [content objectAtIndex: i];
+            tb_print(rightX, rightY++, 0, 0, [[Tui text: item maxWidth: rightX] UTF8String]);
+        }
+    }
     
     // BOTTOM
     int bottomX = 0, bottomY = height - 1;
     tb_print(bottomX, bottomY, 0, TB_BLUE, [[Tui text:@" " maxWidth:width] UTF8String]);
+    
+    if ([message length] > 0) {
+        tb_print(bottomX, bottomY, 0, TB_BLUE, [message UTF8String]);
+        [self setMessage: @""];
+    }
     
     tb_present();
 }

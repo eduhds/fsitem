@@ -23,16 +23,26 @@
 
 @end
 
-@interface SwitchConfig : NSObject
+@interface SwitchConfig : NSObject {
+    Target *target;
+    NSString *config;
+}
+
+@property (nonatomic, retain) Target *target;
+@property (nonatomic, retain) NSString *config;
+
+- (instancetype) initWithTarget: (Target *) t;
 
 + (BOOL) hasConfig;
 + (BOOL) makeConfigDir;
 
-+ (BOOL) targetExists: (Target *) t;
-+ (BOOL) targetIsDirectory: (Target *) t;
-+ (BOOL) targetHasConfig: (Target *) t;
-+ (BOOL) makeTargetConfig: (Target *) t;
-+ (BOOL) makeTargetItem: (Target *) t withName: (NSString *) name;
+- (BOOL) targetExists;
+- (BOOL) targetIsDirectory;
+- (BOOL) targetHasConfig;
+- (BOOL) makeTargetConfig;
+- (BOOL) makeTargetItem: (NSString *) name;
+- (NSArray *) getTargetItems;
+- (NSArray *) readItemContent: (NSString *) name;
 
 @end
 
