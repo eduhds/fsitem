@@ -71,11 +71,19 @@
 - (NSArray *)getTargetItems {
     NSArray *items = [[NSFileManager defaultManager] contentsOfDirectoryAtPath: CONFIG_DIR error: nil];
 
-    items = [items filteredArrayUsingPredicate: [NSPredicate predicateWithBlock: ^BOOL(NSString *item, NSDictionary *bindings) {
-        return [item hasSuffix: [target name]];
-    }]];
-    
-    return items;
+    NSMutableArray *filteredArray = [NSMutableArray array];
+
+    /* for (NSString *item in items) {
+        if ([item hasSuffix:[target name]]) {
+            [filteredArray addObject:item];
+        }
+    } */
+
+    for (NSString *item in items)
+        if (![item isEqualTo: config] && ![item isEqualTo: @".gitignore"] && [item hasSuffix: [target name]])
+            [filteredArray addObject:item];
+
+    return filteredArray;
 }
 
 - (NSArray *) readItemContent: (NSString *) name {

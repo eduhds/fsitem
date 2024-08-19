@@ -58,7 +58,7 @@
     if ([targetItems count] > 0) {
         for (int i = 0; i < [targetItems count]; i++) {
             NSString *item = [targetItems objectAtIndex:i];
-            item = [item componentsSeparatedByString: @"|"][0];
+            item = [[item componentsSeparatedByString: @"|"] objectAtIndex: 0];
 
             NSString *brackets = i == selectedIndex ? @"[✔] " : @"[ ] ";
             
