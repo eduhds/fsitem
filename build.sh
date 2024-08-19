@@ -1,5 +1,7 @@
 #!/bin/bash
 
+clear
+
 mkdir -p bin
 rm bin/*
 
