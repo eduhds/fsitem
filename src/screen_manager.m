@@ -38,10 +38,22 @@
 
 - (void) printScreen {
     tb_clear();
+    
+    // BOX
+    int boxX = 0, boxY = 0, boxLeft = 0, boxRight = width - 1;
+    
+    tb_print(boxX, boxY, 0, 0, [[Tui topLeft] UTF8String]);
+    
+    for (boxX = boxX + 1; boxX < boxRight; boxX++) {
+        tb_print(boxX, 0, 0, 0, [[Tui top] UTF8String]);
+        tb_print(boxX, height - 1, 0, 0, [[Tui top] UTF8String]);
+    }
+    
+    tb_print(boxX, boxY, 0, 0, [[Tui topRight] UTF8String]);
 
     // TOP
     int topX = width / 2 - ((int)[title length] / 2), topY = 0;
-    
+
     tb_print(topX, topY++, TB_GREEN, 0, [[title uppercaseString] UTF8String]);
     tb_print(0, topY++, 0, 0, [[Tui line:width] UTF8String]);
     

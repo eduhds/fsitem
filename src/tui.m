@@ -29,4 +29,36 @@
     return text;
 }
 
++ (NSString *) topLeft {
+    return @"╭";
+}
+
++ (NSString *) topRight {
+    return @"╮";
+}
+
++ (NSString *) bottomLeft {
+    return @"╰";
+}
+
++ (NSString *) bottomRight {
+    return @"╯";
+}
+
++ (NSString *) left {
+    return @"│";
+}
+
++ (NSString *) right {
+    return @"│";
+}
+
++ (NSString *) top {
+    return @"─";
+}
+
++ (NSString *) bottom {
+    return @"─";
+}
+
 @end

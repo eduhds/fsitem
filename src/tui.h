@@ -17,6 +17,16 @@
 
 + (NSString *) text: (NSString *) value maxWidth: (int) width;
 
++ (NSString *) topLeft;
++ (NSString *) topRight;
++ (NSString *) bottomLeft;
++ (NSString *) bottomRight;
+
++ (NSString *) left;
++ (NSString *) right;
++ (NSString *) top;
++ (NSString *) bottom;
+
 @end
 
 #endif /* tui_h */
