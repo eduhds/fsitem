@@ -14,9 +14,9 @@
 #import "screen_manager.h"
 #import "switch_config.h"
 
-#define APP_NAME @"fsitem"
+#define APP_NAME @"SwitchConfig"
 #define APP_VERSION @"1.0.0"
-#define APP_DESCRIPTION @"fsitem"
+#define APP_DESCRIPTION @"SwitchConfig"
 
 int main(int argc, const char * argv[]) {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
@@ -138,6 +138,7 @@ int main(int argc, const char * argv[]) {
                         [sm setFocusIndex: 0];
                         NSArray *items = [switchConfig getTargetItems];
                         [target setItems: items];
+                        [sm setContent: [switchConfig readItemContent: [[target items] objectAtIndex: 0]]];
                         hasItems = YES;
                     } else {
                         [sm setMessage: @"Item não foi criado"];
