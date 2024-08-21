@@ -62,20 +62,20 @@
     int topX = width / 2 - (((int)[title length] + 2) / 2), topY = 0;
 
     tb_printf(topX, topY++, TB_GREEN, 0, " %s ", [[title uppercaseString] UTF8String]);
+    tb_printf(topX, topY++, 0, 0, "%s", [[@"> " stringByAppendingString: [target name]] UTF8String]);
     
     // LEFT
     int leftX = 1, leftY = topY;
     int leftW = (width / 2) - 1;
     int focusW = leftW;
 
-    tb_printf(leftX, leftY++, 0, 0, "%s", [[@"> " stringByAppendingString: [target name]] UTF8String]);
-    tb_print(leftX, leftY++, 0, 0, [[Tui line:leftW] UTF8String]);
+    tb_print(leftX, leftY++, 0, 0, [[Tui line: leftW] UTF8String]);
 
     NSArray *targetItems = [target items];
     
     if ([targetItems count] > 0) {
         for (int i = 0; i < [targetItems count]; i++) {
-            NSString *item = [targetItems objectAtIndex:i];
+            NSString *item = [targetItems objectAtIndex: i];
             item = [[item componentsSeparatedByString: @"|"] objectAtIndex: 0];
 
             NSString *brackets = i == selectedIndex ? @"[✔] " : @"[ ] ";
@@ -84,22 +84,24 @@
             
             int focusY = leftY++;
             if ([areaFocus intValue] == 0 && i == focusIndex) {
-                tb_printf(leftX, focusY, 0, TB_GREEN, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
+                tb_printf(leftX, focusY, 0, TB_GREEN, "%s", [[Tui text: item maxWidth: focusW] UTF8String]);
                 tb_print(focusW -2, focusY, 0, TB_GREEN, "▶");
             } else {
-                tb_printf(leftX, focusY, 0, 0, "%s", [[Tui text:item maxWidth:focusW] UTF8String]);
+                tb_printf(leftX, focusY, 0, 0, "%s", [[Tui text: item maxWidth: focusW] UTF8String]);
             }
         }
     } else {
         tb_print(leftX, leftY++, 0, 0, [[Tui text:@"Nenhum item encontrado" maxWidth:focusW] UTF8String]);
     }
 
-    tb_print(leftX, height - 4, 0, 0, [[Tui line:leftW] UTF8String]);
-    tb_print(leftX, height - 3, 0, 0, [typed UTF8String]);
-    tb_print(leftX, height - 2, 0, 0, [[Tui text:@"" maxWidth:leftW] UTF8String]);
+    tb_print(leftX, height - 6, 0, 0, [[Tui line: leftW - 1] UTF8String]);
+    tb_print(leftX, height - 5, 0, 0, [typed UTF8String]);
+    tb_print(leftX, height - 4, 0, 0, [[Tui line: leftW - 1] UTF8String]);
+    
+    //tb_print(leftX, height - 2, 0, 0, [[Tui text:@"" maxWidth:leftW] UTF8String]);
 
     if ([areaFocus intValue] == 1) {
-        tb_set_cursor((int)[typed length] + 1, height - 3);
+        tb_set_cursor((int)[typed length] + 1, height - 5);
     } else {
         tb_hide_cursor();
     }
@@ -107,12 +109,16 @@
     // MIDDLE
     int middleX = leftW, middleY = topY;
     
-    for (int i = middleY; i < boxY; i++) {
-        tb_print(middleX, i, 0, 0, [[Tui left] UTF8String]);
+    tb_print(middleX, middleY, 0, 0, [[Tui topRight] UTF8String]);
+
+    for (middleY = middleY + 1; middleY < height - 4; middleY++) {
+        tb_print(middleX, middleY, 0, 0, [[Tui left] UTF8String]);
     }
     
+    tb_print(middleX, middleY++, 0, 0, [[Tui bottomRight] UTF8String]);
+    
     // RIGHT
-    int rightX = middleX + 1, rightY = topY;
+    int rightX = middleX + 1, rightY = topY + 2;
     //int rightW = width - leftW;
     
     if ([content count] > 0) {
@@ -125,10 +131,16 @@
     
     // BOTTOM
     int bottomX = 1, bottomY = boxY - 1;
-    tb_print(bottomX, bottomY, 0, TB_BLUE, [[Tui text:@" " maxWidth: (boxX - 1)] UTF8String]);
+    tb_print(bottomX, bottomY, 0, TB_WHITE, [[Tui text:@" <ESC> to exit <SPACE> to select <ENTER> to confirm" maxWidth: (boxX - 1)] UTF8String]);
+    tb_print(bottomX, bottomY - 1, 0, TB_WHITE, [[Tui text:@" " maxWidth: (boxX - 1)] UTF8String]);
+    
+    if ([typed length] > 0) {
+        tb_print((width / 2) - 10, bottomY - 1, 0, [areaFocus intValue] == 2 ? TB_BLUE : TB_WHITE, [@"<cancel>" UTF8String]);
+        tb_print((width / 2) + 2, bottomY - 1, 0, [areaFocus intValue] == 3 ? TB_BLUE : TB_WHITE, [@"<confirm>" UTF8String]);
+    }
     
     if ([message length] > 0) {
-        tb_print(bottomX, bottomY, 0, TB_BLUE, [message UTF8String]);
+        tb_print(bottomX, bottomY, 0, TB_WHITE, [message UTF8String]);
         [self setMessage: @""];
     }
     

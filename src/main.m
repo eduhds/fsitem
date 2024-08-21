@@ -14,9 +14,9 @@
 #import "screen_manager.h"
 #import "switch_config.h"
 
-#define APP_NAME @"SwitchConfig"
+#define APP_NAME @"Switch-Config"
 #define APP_VERSION @"1.0.0"
-#define APP_DESCRIPTION @"SwitchConfig"
+#define APP_DESCRIPTION @"Switch-Config"
 
 int main(int argc, const char * argv[]) {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
@@ -87,7 +87,9 @@ int main(int argc, const char * argv[]) {
 
         // Tab pressed
         if (ev.key == TB_KEY_TAB) {
-            [sm setAreaFocus: [[sm areaFocus] intValue] == 0 ? [NSNumber numberWithInt: 1] : [NSNumber numberWithInt: 0]];
+            int area = [[sm areaFocus] intValue];
+            area = area < AREAS ? (area == 2 || area == 3) && [[sm typed] length] > 0 ? area == 2 ? 3 : 2 : area + 1 : 0;
+            [sm setAreaFocus: [NSNumber numberWithInt: area]];
         }
         
         if ([[sm areaFocus] intValue] == 0) {
@@ -146,13 +148,25 @@ int main(int argc, const char * argv[]) {
                 }
             }
         }
+        
+        if ([[sm areaFocus] intValue] == 2) {
+            if (ev.key == TB_KEY_ARROW_LEFT || ev.key == TB_KEY_ARROW_RIGHT) {
+                [sm setAreaFocus: [NSNumber numberWithInt: 3]];
+            }
+        }
+        
+        if ([[sm areaFocus] intValue] == 3) {
+            if (ev.key == TB_KEY_ARROW_LEFT || ev.key == TB_KEY_ARROW_RIGHT) {
+                [sm setAreaFocus: [NSNumber numberWithInt: 2]];
+            }
+        }
 
         [sm printScreen];
 
         // TODO: remover
-        tb_printf([sm width] - 10, [sm height] - 1, 0, TB_BLUE, "                                ");
-        tb_printf([sm width] - 10, [sm height] - 1, 0, TB_BLUE, "%d %d %d", ev.type, ev.key, ev.ch);
-        tb_present();
+        //tb_printf([sm width] - 10, [sm height] - 1, 0, TB_BLUE, "                                ");
+        //tb_printf([sm width] - 10, [sm height] - 1, 0, TB_BLUE, "%d %d %d", ev.type, ev.key, ev.ch);
+        //tb_present();
     }
 
     [pool drain];

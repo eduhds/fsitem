@@ -12,6 +12,8 @@
 
 #import "switch_config.h"
 
+#define AREAS 3
+
 @interface ScreenManager : NSObject {
     int width; // int _width;
     int height; // int _height;
