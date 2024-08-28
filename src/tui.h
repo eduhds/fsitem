@@ -27,6 +27,9 @@
 + (NSString *) top;
 + (NSString *) bottom;
 
++ (NSString *) vertLine;
++ (NSString *) horizLine;
+
 @end
 
 #endif /* tui_h */

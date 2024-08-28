@@ -61,4 +61,12 @@
     return @"─";
 }
 
++ (NSString *) vertLine {
+    return @"│";
+}
+
++ (NSString *) horizLine {
+    return @"─";
+}
+
 @end

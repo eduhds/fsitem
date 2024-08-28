@@ -12,7 +12,9 @@
 
 #import "switch_config.h"
 
-#define AREAS 3
+#define AREAS 2
+#define AREA_1 1
+#define AREA_2 2
 
 @interface ScreenManager : NSObject {
     int width; // int _width;
@@ -25,6 +27,8 @@
     NSString *typed;
     NSString *message;
     NSNumber *areaFocus;
+    BOOL alertVisible;
+    BOOL alertCancelFocus;
 }
 
 @property (nonatomic) int width; // Number of characters
@@ -37,8 +41,12 @@
 @property (nonatomic, retain) NSString *typed;
 @property (nonatomic, retain) NSString *message;
 @property (nonatomic, retain) NSNumber *areaFocus;
+@property (nonatomic) BOOL alertVisible;
+@property (nonatomic) BOOL alertCancelFocus;
 
 - (void) printScreen;
+
+- (void) printAlert;
 
 @end
 

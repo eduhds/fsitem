@@ -23,6 +23,8 @@
 @synthesize typed;
 @synthesize message;
 @synthesize areaFocus;
+@synthesize alertVisible;
+@synthesize alertCancelFocus;
 
 - (id) init {
     self = [super init];
@@ -32,7 +34,9 @@
     self.content = [[NSArray alloc] init];
     self.typed = [[NSString alloc] init];
     self.message = [[NSString alloc] init];
-    self.areaFocus = [NSNumber numberWithInt:0];
+    self.areaFocus = [NSNumber numberWithInt: AREA_1];
+    self.alertVisible = NO;
+    self.alertCancelFocus = YES;
     return self;
 }
 
@@ -83,7 +87,7 @@
             item = [brackets stringByAppendingFormat: @"%@", item];
             
             int focusY = leftY++;
-            if ([areaFocus intValue] == 0 && i == focusIndex) {
+            if ([areaFocus intValue] == AREA_1 && i == focusIndex) {
                 tb_printf(leftX, focusY, 0, TB_GREEN, "%s", [[Tui text: item maxWidth: focusW] UTF8String]);
                 tb_print(focusW -2, focusY, 0, TB_GREEN, "▶");
             } else {
@@ -95,13 +99,13 @@
     }
 
     tb_print(leftX, height - 6, 0, 0, [[Tui line: leftW - 1] UTF8String]);
-    tb_print(leftX, height - 5, 0, 0, [typed UTF8String]);
+    tb_printf(leftX, height - 5, 0, 0, "> %s", [typed UTF8String]);
     tb_print(leftX, height - 4, 0, 0, [[Tui line: leftW - 1] UTF8String]);
     
     //tb_print(leftX, height - 2, 0, 0, [[Tui text:@"" maxWidth:leftW] UTF8String]);
 
-    if ([areaFocus intValue] == 1) {
-        tb_set_cursor((int)[typed length] + 1, height - 5);
+    if ([areaFocus intValue] == AREA_2) {
+        tb_set_cursor((int)[typed length] + 3, height - 5);
     } else {
         tb_hide_cursor();
     }
@@ -130,20 +134,77 @@
     }
     
     // BOTTOM
-    int bottomX = 1, bottomY = boxY - 1;
-    tb_print(bottomX, bottomY, 0, TB_WHITE, [[Tui text:@" <ESC> to exit <SPACE> to select <ENTER> to confirm" maxWidth: (boxX - 1)] UTF8String]);
-    tb_print(bottomX, bottomY - 1, 0, TB_WHITE, [[Tui text:@" " maxWidth: (boxX - 1)] UTF8String]);
+    int bottomX = 1, bottomY = boxY - 2;
+    NSString *tips = @"<ESC> to exit <SPACE> to select <ENTER> to confirm";
     
-    if ([typed length] > 0) {
-        tb_print((width / 2) - 10, bottomY - 1, 0, [areaFocus intValue] == 2 ? TB_BLUE : TB_WHITE, [@"<cancel>" UTF8String]);
-        tb_print((width / 2) + 2, bottomY - 1, 0, [areaFocus intValue] == 3 ? TB_BLUE : TB_WHITE, [@"<confirm>" UTF8String]);
-    }
-    
+    tb_print(bottomX, bottomY, 0, TB_WHITE, [[Tui text:@" " maxWidth: (boxX - 1)] UTF8String]);
+    tb_print((width / 2) - ((int)[tips length] / 2), bottomY++, 0, TB_WHITE, [tips UTF8String]);
+    tb_print(bottomX, bottomY, 0, TB_WHITE, [[Tui text:@" " maxWidth: (boxX - 1)] UTF8String]);
+
     if ([message length] > 0) {
         tb_print(bottomX, bottomY, 0, TB_WHITE, [message UTF8String]);
         [self setMessage: @""];
     }
     
+    tb_present();
+}
+
+- (void) printAlert {
+    tb_hide_cursor();
+
+    int centerX = width / 2, centerY = height / 2;
+    int alertW = width / 2, alertH = alertW / 3;
+    int alertX = centerX - (alertW / 2);
+    int alertY = centerY - (alertH / 2);
+    int borderY = alertY + 1;
+    
+    int endY = (centerY + (alertH / 2));
+    int endX = (centerX + (alertW / 2));
+    
+    NSString *alertTitle = @" Alert ";
+    NSString *alertMessage = @"Are you sure?";
+    
+    for (int y = alertY; y < endY; y++) { // Linhas
+        for (int x = alertX; x < endX; x++) { // Colunas
+            tb_print(x, y, 0, TB_WHITE, " ");
+            
+            if ((y == alertY || y == (endY - 1)) && x > alertX && x < (endX - 1)) {
+                tb_print(x, y, TB_BLACK, TB_WHITE, [[Tui horizLine] UTF8String]); //
+            }
+            
+            if (x == alertX + 1 || x == (endX - 2)) {
+                tb_print(x, y, TB_BLACK, TB_WHITE, [[Tui vertLine] UTF8String]);
+            }
+            
+            if (y == alertY) {
+                tb_print(centerX - ((int)[alertTitle length] / 2), y, TB_BLACK, TB_WHITE, [alertTitle UTF8String]);
+            }
+            
+            if (y == centerY - 1) {
+                tb_print(centerX - ((int)[alertMessage length] / 2), y, TB_BLACK, TB_WHITE, [alertMessage UTF8String]);
+            }
+            
+            if (y == endY - 2) {
+                tb_print(centerX - 11, y, TB_WHITE, alertCancelFocus ? TB_BLUE : TB_WHITE, [@" <Cancel> " UTF8String]);
+                tb_print(centerX + 1, y, TB_WHITE, alertCancelFocus ? TB_WHITE : TB_BLUE, [@" <Confirm> " UTF8String]);
+            }
+            
+            tb_print(x + 1, endY, 0, TB_BLACK, "  "); // Border bottom
+        }
+        
+        if (y == alertY) {
+            tb_print(alertX + 1, y, TB_BLACK, TB_WHITE, [[Tui topLeft] UTF8String]);
+            tb_print(endX - 2, y, TB_BLACK, TB_WHITE, [[Tui topRight] UTF8String]);
+        }
+        
+        if (y == (endY - 1)) {
+            tb_print(alertX + 1, y, TB_BLACK, TB_WHITE, [[Tui bottomLeft] UTF8String]);
+            tb_print(endX - 2, y, TB_BLACK, TB_WHITE, [[Tui bottomRight] UTF8String]);
+        }
+        
+        tb_print(endX, y + 1, 0, TB_BLACK, "  "); // Border right
+    }
+
     tb_present();
 }
 
