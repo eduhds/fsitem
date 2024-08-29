@@ -20,6 +20,7 @@
 
 @synthesize target;
 @synthesize config;
+@synthesize current;
 
 - (instancetype) initWithTarget: (Target *) t {
     self = [super init];
@@ -68,7 +69,7 @@
     return [[NSFileManager defaultManager] copyItemAtPath: [target name] toPath: path error: nil];
 }
 
-- (NSArray *)getTargetItems {
+- (NSArray *) getTargetItems {
     NSArray *items = [[NSFileManager defaultManager] contentsOfDirectoryAtPath: CONFIG_DIR error: nil];
 
     NSMutableArray *filteredArray = [NSMutableArray array];
@@ -80,9 +81,12 @@
     } */
 
     for (NSString *item in items)
-        if (![item isEqualTo: config] && ![item isEqualTo: @".gitignore"] && [item hasSuffix: [target name]])
-            [filteredArray addObject:item];
-
+        if (![item isEqualTo: config] && ![item isEqualTo: @".gitignore"] && [item hasSuffix: [target name]]) {
+            if ([item hasPrefix: @"!"]) {
+                [self setCurrent: item];
+            }
+            [filteredArray addObject: item];
+        }
     return filteredArray;
 }
 
@@ -90,6 +94,34 @@
     NSString *path = [NSString stringWithFormat: @"%@/%@", CONFIG_DIR, name];
     NSString *content = [NSString stringWithContentsOfFile: path encoding: NSUTF8StringEncoding error: nil];
     return [content componentsSeparatedByString: @"\n"];
+}
+
+- (BOOL) replaceItem: (int) selectedIndex {
+    NSString *targetName = [target name];
+    NSString *itemToReplace = [[self getTargetItems] objectAtIndex: selectedIndex];
+
+    NSString *from = [NSString stringWithFormat: @"%@/%@", CONFIG_DIR, itemToReplace];
+    NSString *new = [NSString stringWithFormat: @"%@/!%@", CONFIG_DIR, itemToReplace];
+    NSString *to = [NSString stringWithFormat: @"%@", targetName];
+    NSString *oldFrom = [NSString stringWithFormat: @"%@/%@", CONFIG_DIR, current];
+    NSString *oldTo = [NSString stringWithFormat: @"%@/%@", CONFIG_DIR, [current substringFromIndex: 1]];
+
+    if ([[NSFileManager defaultManager] removeItemAtPath: to error: nil]) {
+        // Removed target file
+        if ([[NSFileManager defaultManager] copyItemAtPath: from toPath: to error: nil]) {
+            // Created new target file
+            if ([[NSFileManager defaultManager] moveItemAtPath: from toPath: new error: nil]) {
+                // Renamed new target item file
+                if ([[NSFileManager defaultManager] moveItemAtPath: oldFrom toPath: oldTo error: nil]) {
+                    // Renamed old target item file
+                    [self setCurrent: [@"!%@" stringByAppendingString: itemToReplace]];
+                    return YES;
+                };
+            }
+        }
+    }
+
+    return NO;
 }
 
 @end

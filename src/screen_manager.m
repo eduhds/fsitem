@@ -66,7 +66,7 @@
     int topX = width / 2 - (((int)[title length] + 2) / 2), topY = 0;
 
     tb_printf(topX, topY++, TB_GREEN, 0, " %s ", [[title uppercaseString] UTF8String]);
-    tb_printf(topX, topY++, 0, 0, "%s", [[@"> " stringByAppendingString: [target name]] UTF8String]);
+    tb_printf(topX, topY++, 0, 0, "%s", [[target name] UTF8String]);
     
     // LEFT
     int leftX = 1, leftY = topY;
@@ -82,9 +82,18 @@
             NSString *item = [targetItems objectAtIndex: i];
             item = [[item componentsSeparatedByString: @"|"] objectAtIndex: 0];
 
-            NSString *brackets = i == selectedIndex ? @"[✔] " : @"[ ] ";
+            BOOL isCurrentItem = [item hasPrefix: @"!"];
+            if (isCurrentItem) {
+                item = [item substringFromIndex: 1];
+            }
+
+            NSString *brackets = [@"" stringByAppendingFormat: @"[%@] ", isCurrentItem ? selectedIndex == -1 ? @"✔" : @"*" : i == selectedIndex ? @"✔" : @" "];
             
             item = [brackets stringByAppendingFormat: @"%@", item];
+
+            if (isCurrentItem) {
+                item = [item stringByAppendingString: @" (current)"];
+            }
             
             int focusY = leftY++;
             if ([areaFocus intValue] == AREA_1 && i == focusIndex) {
@@ -135,7 +144,7 @@
     
     // BOTTOM
     int bottomX = 1, bottomY = boxY - 2;
-    NSString *tips = @"<ESC> to exit <SPACE> to select <ENTER> to confirm";
+    NSString *tips = @"<ESC> to exit <TAB> to move <SPACE> to select <ENTER> to confirm";
     
     tb_print(bottomX, bottomY, 0, TB_WHITE, [[Tui text:@" " maxWidth: (boxX - 1)] UTF8String]);
     tb_print((width / 2) - ((int)[tips length] / 2), bottomY++, 0, TB_WHITE, [tips UTF8String]);
@@ -149,20 +158,19 @@
     tb_present();
 }
 
-- (void) printAlert {
+- (void) printAlert: (NSString *) aMessage {
     tb_hide_cursor();
 
     int centerX = width / 2, centerY = height / 2;
-    int alertW = width / 2, alertH = alertW / 3;
+    int alertW = width / 2, alertH = MIN(alertW / 3, height);
     int alertX = centerX - (alertW / 2);
     int alertY = centerY - (alertH / 2);
-    int borderY = alertY + 1;
     
     int endY = (centerY + (alertH / 2));
     int endX = (centerX + (alertW / 2));
     
     NSString *alertTitle = @" Alert ";
-    NSString *alertMessage = @"Are you sure?";
+    NSString *alertMessage = aMessage != nil ? aMessage : @"Are you sure?";
     
     for (int y = alertY; y < endY; y++) { // Linhas
         for (int x = alertX; x < endX; x++) { // Colunas

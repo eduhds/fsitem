@@ -46,7 +46,7 @@
 
 - (void) printScreen;
 
-- (void) printAlert;
+- (void)printAlert: (NSString *) aMessage;
 
 @end
 

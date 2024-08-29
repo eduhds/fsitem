@@ -26,10 +26,12 @@
 @interface SwitchConfig : NSObject {
     Target *target;
     NSString *config;
+    NSString *current;
 }
 
 @property (nonatomic, retain) Target *target;
 @property (nonatomic, retain) NSString *config;
+@property (nonatomic, retain) NSString *current;
 
 - (instancetype) initWithTarget: (Target *) t;
 
@@ -43,6 +45,7 @@
 - (BOOL) makeTargetItem: (NSString *) name;
 - (NSArray *) getTargetItems;
 - (NSArray *) readItemContent: (NSString *) name;
+- (BOOL) replaceItem: (int) selectedIndex;
 
 @end
 

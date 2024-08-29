@@ -70,6 +70,8 @@ int main(int argc, const char * argv[]) {
     
     [sm printScreen];
 
+    NSString *alertMessage = @"";
+
     while (true) {
         tb_poll_event(&ev);
         
@@ -94,7 +96,14 @@ int main(int argc, const char * argv[]) {
             if (ev.key == TB_KEY_ENTER) {
                 if ([sm alertCancelFocus] == NO) {
                     if ([sm areaFocus] == [NSNumber numberWithInt: AREA_1]) { // Switch target item
-                        // TODO: switch config
+                        if ([switchConfig replaceItem: [sm selectedIndex]]) {
+                            [target setItems: [switchConfig getTargetItems]];
+                            [sm setTarget: target];
+                            [sm setFocusIndex: 0];
+                            [sm setSelectedIndex: -1];
+                        } else {
+                            [sm setMessage: @"Item não foi trocado"];
+                        }
                     } else { // Create target item
                         if (!hasConfig) {
                             hasConfig = [SwitchConfig makeConfigDir] && [switchConfig makeTargetConfig];
@@ -105,8 +114,8 @@ int main(int argc, const char * argv[]) {
                             [sm setTyped: @""];
                             [sm setAreaFocus: [NSNumber numberWithInt: AREA_1]];
                             [sm setFocusIndex: 0];
-                            NSArray *items = [switchConfig getTargetItems];
-                            [target setItems: items];
+                            [target setItems: [switchConfig getTargetItems]];
+                            [sm setTarget: target];
                             [sm setContent: [switchConfig readItemContent: [[target items] objectAtIndex: 0]]];
                             hasItems = YES;
                         } else {
@@ -117,6 +126,7 @@ int main(int argc, const char * argv[]) {
                 
                 [sm setAlertVisible: NO];
                 [sm setAlertCancelFocus: YES];
+                alertMessage = @"";
             }
         } else {
             // Tab pressed
@@ -124,6 +134,7 @@ int main(int argc, const char * argv[]) {
                 int area = [[sm areaFocus] intValue];
                 area = area < AREAS ? area + 1 : AREA_1;
                 [sm setAreaFocus: [NSNumber numberWithInt: area]];
+                [sm setSelectedIndex: -1];
             }
             
             if ([[sm areaFocus] intValue] == AREA_1) {
@@ -139,15 +150,26 @@ int main(int argc, const char * argv[]) {
                     [sm setContent: [switchConfig readItemContent: [[target items] objectAtIndex: value]]];
                 }
 
+                BOOL isCurrentFocused = [[[target items] objectAtIndex: [sm focusIndex]] isEqualTo: [switchConfig current]];
+
                 // Select item
                 if (ev.ch == TB_KEY_SPACE) {
-                    [sm setSelectedIndex: [sm selectedIndex] == [sm focusIndex] ? -1 : [sm focusIndex]];
+                    if (isCurrentFocused) {
+                        [sm setMessage: @"Target already selected"];
+                    } else {
+                        [sm setSelectedIndex: [sm selectedIndex] == [sm focusIndex] ? -1 : [sm focusIndex]];
+                    }
                 }
-                
+
                 // Enter
                 if (ev.key == TB_KEY_ENTER) {
-                    if ([sm selectedIndex] != -1) {
+                    if (isCurrentFocused) {
+                        [sm setMessage: @"Target already selected"];
+                    } else if ([sm selectedIndex] != -1) {
                         [sm setAlertVisible: YES];
+                        alertMessage = @"Switch current config?";
+                    } else {
+                        [sm setMessage: @"Select a item first"];
                     }
                 }
             }
@@ -170,6 +192,9 @@ int main(int argc, const char * argv[]) {
                     // TODO: validar typed
                     if ([[sm typed] length] > 0) {
                         [sm setAlertVisible: YES];
+                        alertMessage = [NSString stringWithFormat: @"Criar \"%@\"?", [sm typed]];
+                    } else {
+                        [sm setMessage: @"Type something first"];
                     }
                 }
             }
@@ -178,7 +203,7 @@ int main(int argc, const char * argv[]) {
         [sm printScreen];
         
         if ([sm alertVisible]) {
-            [sm printAlert];
+            [sm printAlert: alertMessage];
         }
     }
 
