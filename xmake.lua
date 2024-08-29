@@ -11,8 +11,18 @@ target('app')
     set_languages('c11')
     add_deps("termbox2")
     add_files("src/*.m")
-    add_mflags(objcFlags)
-    add_links(gnustepLinks)
+
+    if is_plat('linux') then
+        add_mflags(objcFlags)
+        add_links(gnustepLinks)
+    end
+
+    if is_plat('macosx') then
+        add_mflags('-fno-objc-arc')
+        add_frameworks('Foundation')
+    end
+
     if is_mode("debug") then
         add_defines("DEBUG")
     end
+
