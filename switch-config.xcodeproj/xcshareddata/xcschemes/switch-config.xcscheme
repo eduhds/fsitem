@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A0847760284D3A4E00830BD1"
-               BuildableName = "fsitem"
-               BlueprintName = "fsitem"
-               ReferencedContainer = "container:fsitem.xcodeproj">
+               BuildableName = "switch-config"
+               BlueprintName = "switch-config"
+               ReferencedContainer = "container:switch-config.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,9 +46,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A0847760284D3A4E00830BD1"
-            BuildableName = "fsitem"
-            BlueprintName = "fsitem"
-            ReferencedContainer = "container:fsitem.xcodeproj">
+            BuildableName = "switch-config"
+            BlueprintName = "switch-config"
+            ReferencedContainer = "container:switch-config.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -63,9 +63,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A0847760284D3A4E00830BD1"
-            BuildableName = "fsitem"
-            BlueprintName = "fsitem"
-            ReferencedContainer = "container:fsitem.xcodeproj">
+            BuildableName = "switch-config"
+            BlueprintName = "switch-config"
+            ReferencedContainer = "container:switch-config.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

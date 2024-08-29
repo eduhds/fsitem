@@ -1,6 +1,5 @@
 //
 //  switch_config.h
-//  fsitem
 //
 //  Created by Eduardo Henrique da Silva on 16/08/24.
 //

@@ -1,6 +1,5 @@
 //
 //  switch_config.m
-//  fsitem
 //
 //  Created by Eduardo Henrique da Silva on 16/08/24.
 //
@@ -112,11 +111,10 @@
             // Created new target file
             if ([[NSFileManager defaultManager] moveItemAtPath: from toPath: new error: nil]) {
                 // Renamed new target item file
-                if ([[NSFileManager defaultManager] moveItemAtPath: oldFrom toPath: oldTo error: nil]) {
-                    // Renamed old target item file
-                    [self setCurrent: [@"!%@" stringByAppendingString: itemToReplace]];
-                    return YES;
-                };
+                // Try rename old target item file
+                [[NSFileManager defaultManager] moveItemAtPath: oldFrom toPath: oldTo error: nil];
+                [self setCurrent: [@"!%@" stringByAppendingString: itemToReplace]];
+                return YES;
             }
         }
     }

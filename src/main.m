@@ -1,6 +1,5 @@
 //
 //  main.m
-//  fsitem
 //
 //  Created by Eduardo Henrique on 05/06/22.
 //
@@ -9,8 +8,6 @@
 
 #import "libs/termbox2.h"
 #import "argparse.h"
-#import "fs_item.h"
-#import "util.h"
 #import "screen_manager.h"
 #import "switch_config.h"
 

@@ -1,6 +1,5 @@
 //
 //  termbox2.c
-//  fsitem
 //
 //  Created by Eduardo Henrique da Silva on 08/08/24.
 //

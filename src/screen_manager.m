@@ -1,6 +1,5 @@
 //
 //  screen_manager.m
-//  fsitem
 //
 //  Created by Eduardo Henrique da Silva on 16/08/24.
 //

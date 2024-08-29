@@ -1,6 +1,5 @@
 //
 //  argparse.h
-//  fsitem
 //
 //  Created by Eduardo Henrique da Silva on 14/08/24.
 //
