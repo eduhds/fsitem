@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Switch-Config
+Exec=switch-config
+Icon=switch-config
+Type=Application
+Categories=Utility;
+Terminal=true
