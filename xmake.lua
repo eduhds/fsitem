@@ -5,7 +5,7 @@ target("termbox2")
     set_kind("object")
     add_files("src/libs/*.c")
 
-target('app')
+target('switch-config')
     add_rules("mode.debug", "mode.release")
     set_kind('binary')
     set_languages('c11')
