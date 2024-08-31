@@ -28,6 +28,7 @@
     NSNumber *areaFocus;
     BOOL alertVisible;
     BOOL alertCancelFocus;
+    BOOL success;
 }
 
 @property (nonatomic) int width; // Number of characters
@@ -42,10 +43,13 @@
 @property (nonatomic, retain) NSNumber *areaFocus;
 @property (nonatomic) BOOL alertVisible;
 @property (nonatomic) BOOL alertCancelFocus;
+@property (nonatomic) BOOL success;
 
 - (void) printScreen;
 
-- (void)printAlert: (NSString *) aMessage;
+- (void) printAlert: (NSString *) aMessage;
+
+- (void) setStatus: (NSString *) aMessage success: (BOOL) status;
 
 @end
 

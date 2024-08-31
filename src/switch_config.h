@@ -26,16 +26,18 @@
     Target *target;
     NSString *config;
     NSString *current;
+    NSError *lastError;
 }
 
 @property (nonatomic, retain) Target *target;
 @property (nonatomic, retain) NSString *config;
 @property (nonatomic, retain) NSString *current;
+@property (nonatomic, retain) NSError *lastError;
 
 - (instancetype) initWithTarget: (Target *) t;
 
 + (BOOL) hasConfig;
-+ (BOOL) makeConfigDir;
+- (BOOL) makeConfigDir;
 
 - (BOOL) targetExists;
 - (BOOL) targetIsDirectory;

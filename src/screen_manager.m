@@ -24,6 +24,7 @@
 @synthesize areaFocus;
 @synthesize alertVisible;
 @synthesize alertCancelFocus;
+@synthesize success;
 
 - (id) init {
     self = [super init];
@@ -36,6 +37,7 @@
     self.areaFocus = [NSNumber numberWithInt: AREA_1];
     self.alertVisible = NO;
     self.alertCancelFocus = YES;
+    self.success = YES;
     return self;
 }
 
@@ -147,11 +149,12 @@
     
     tb_print(bottomX, bottomY, 0, TB_WHITE, [[Tui text:@" " maxWidth: (boxX - 1)] UTF8String]);
     tb_print((width / 2) - ((int)[tips length] / 2), bottomY++, 0, TB_WHITE, [tips UTF8String]);
-    tb_print(bottomX, bottomY, 0, TB_WHITE, [[Tui text:@" " maxWidth: (boxX - 1)] UTF8String]);
+    tb_print(bottomX, bottomY, 0, success ? TB_BLUE : TB_RED, [[Tui text:@" " maxWidth: (boxX - 1)] UTF8String]);
 
     if ([message length] > 0) {
-        tb_print(bottomX, bottomY, 0, TB_WHITE, [message UTF8String]);
+        tb_print(bottomX, bottomY, TB_WHITE, success ? TB_BLUE : TB_RED, [message UTF8String]);
         [self setMessage: @""];
+        [self setSuccess: YES];
     }
     
     tb_present();
@@ -161,7 +164,7 @@
     tb_hide_cursor();
 
     int centerX = width / 2, centerY = height / 2;
-    int alertW = width / 2, alertH = MIN(alertW / 3, height);
+    int alertW = width / 2, alertH = MIN(alertW / 3, height - 2);
     int alertX = centerX - (alertW / 2);
     int alertY = centerY - (alertH / 2);
     
@@ -213,6 +216,11 @@
     }
 
     tb_present();
+}
+
+- (void) setStatus: (NSString *) aMessage success: (BOOL) status {
+    [self setMessage: aMessage];
+    [self setSuccess: status];
 }
 
 @end

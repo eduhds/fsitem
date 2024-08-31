@@ -99,15 +99,15 @@ int main(int argc, const char * argv[]) {
                             [sm setFocusIndex: 0];
                             [sm setSelectedIndex: -1];
                         } else {
-                            [sm setMessage: @"Item não foi trocado"];
+                            [sm setStatus: @"Item não foi trocado" success: NO];
                         }
                     } else { // Create target item
                         if (!hasConfig) {
-                            hasConfig = [SwitchConfig makeConfigDir] && [switchConfig makeTargetConfig];
+                            hasConfig = [switchConfig makeConfigDir] && [switchConfig makeTargetConfig];
                         }
 
                         if (hasConfig && [switchConfig makeTargetItem: [sm typed]]) {
-                            [sm setMessage: [NSString stringWithFormat: @"\"%@\" criado com sucesso", [sm typed]]];
+                            [sm setStatus: [NSString stringWithFormat: @"\"%@\" criado com sucesso", [sm typed]] success: YES];
                             [sm setTyped: @""];
                             [sm setAreaFocus: [NSNumber numberWithInt: AREA_1]];
                             [sm setFocusIndex: 0];
@@ -116,7 +116,7 @@ int main(int argc, const char * argv[]) {
                             [sm setContent: [switchConfig readItemContent: [[target items] objectAtIndex: 0]]];
                             hasItems = YES;
                         } else {
-                            [sm setMessage: @"Item não foi criado"];
+                            [sm setStatus: @"Item não foi criado" success: NO];
                         }
                     }
                 }
@@ -152,7 +152,7 @@ int main(int argc, const char * argv[]) {
                 // Select item
                 if (ev.ch == TB_KEY_SPACE) {
                     if (isCurrentFocused) {
-                        [sm setMessage: @"Target already selected"];
+                        [sm setStatus: @"Target already selected" success: NO];
                     } else {
                         [sm setSelectedIndex: [sm selectedIndex] == [sm focusIndex] ? -1 : [sm focusIndex]];
                     }
@@ -161,12 +161,12 @@ int main(int argc, const char * argv[]) {
                 // Enter
                 if (ev.key == TB_KEY_ENTER) {
                     if (isCurrentFocused) {
-                        [sm setMessage: @"Target already selected"];
+                        [sm setStatus: @"Target already selected" success: NO];
                     } else if ([sm selectedIndex] != -1) {
                         [sm setAlertVisible: YES];
                         alertMessage = @"Switch current config?";
                     } else {
-                        [sm setMessage: @"Select a item first"];
+                        [sm setStatus: @"Select a item first" success: NO];
                     }
                 }
             }
@@ -191,10 +191,15 @@ int main(int argc, const char * argv[]) {
                         [sm setAlertVisible: YES];
                         alertMessage = [NSString stringWithFormat: @"Criar \"%@\"?", [sm typed]];
                     } else {
-                        [sm setMessage: @"Type something first"];
+                        [sm setStatus: @"Type something first" success: NO];
                     }
                 }
             }
+        }
+        
+        if ([switchConfig lastError] != nil) {
+            [sm setStatus: [[switchConfig lastError] localizedDescription] success: NO];
+            [switchConfig setLastError: nil];
         }
         
         [sm printScreen];
