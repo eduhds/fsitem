@@ -64,10 +64,20 @@
     }
 
     // TOP
-    int topX = width / 2 - (((int)[title length] + 2) / 2), topY = 0;
+    int topX = width / 2, topY = 0;
+    int titleX = topX - ((int)[title length] + 2) / 2;
+    int targetX = topX - 2 - (int)[[target name] length];
 
-    tb_printf(topX, topY++, TB_GREEN, 0, " %s ", [[title uppercaseString] UTF8String]);
-    tb_printf(topX, topY++, 0, 0, "%s", [[target name] UTF8String]);
+    tb_printf(titleX, topY++, TB_GREEN, 0, " %s ", [[title uppercaseString] UTF8String]);
+    tb_print(targetX, topY, 0, 0, [[target name] UTF8String]);
+    tb_print(topX - 2, topY++, 0, 0, " 🢐🢒 ");
+    
+    if ([target current] != nil) {
+        NSString *current = [[[[target current] componentsSeparatedByString: @"|"] firstObject] substringFromIndex: 1];
+        tb_print(topX + 2, topY - 1, TB_BLUE, 0, [current UTF8String]);
+    } else {
+        tb_print(topX + 2, topY - 1, TB_RED, 0, "<none>");
+    }
     
     // LEFT
     int leftX = 1, leftY = topY;
@@ -86,7 +96,7 @@
         
         if (itemsSize > 0) {
             int start = focusIndex >= maxLeftH ? focusIndex - maxLeftH : 0;
-            
+
             for (int i = start; i < itemsSize; i++) {
                 if (leftY > maxLeftY) {
                     break;

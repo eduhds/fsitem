@@ -147,7 +147,7 @@ int main(int argc, const char * argv[]) {
                     [sm setContent: [switchConfig readItemContent: [[target items] objectAtIndex: value]]];
                 }
 
-                BOOL isCurrentFocused = [[[target items] objectAtIndex: [sm focusIndex]] isEqualTo: [switchConfig current]];
+                BOOL isCurrentFocused = [[[target items] objectAtIndex: [sm focusIndex]] isEqualTo: [[switchConfig target] current]];
 
                 // Select item
                 if (ev.ch == TB_KEY_SPACE) {

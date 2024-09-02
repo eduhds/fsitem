@@ -15,23 +15,23 @@
 @interface Target : NSObject {
     NSString *name;
     NSArray *items;
+    NSString *current;
 }
 
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSArray *items;
+@property (nonatomic, retain) NSString *current;
 
 @end
 
 @interface SwitchConfig : NSObject {
     Target *target;
     NSString *config;
-    NSString *current;
     NSError *lastError;
 }
 
 @property (nonatomic, retain) Target *target;
 @property (nonatomic, retain) NSString *config;
-@property (nonatomic, retain) NSString *current;
 @property (nonatomic, retain) NSError *lastError;
 
 - (instancetype) initWithTarget: (Target *) t;
