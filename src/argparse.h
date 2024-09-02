@@ -38,10 +38,10 @@
 }
 
 - (BOOL) parse: (int) argc withArgv: (const char *[]) argv {
-    if (argc < 2) {
+    /* TODO: if (argc < 2) {
         printf("No arguments.\n");
         return NO;
-    }
+    } */
     
     for (int i = 1; i < argc; i++) {
         NSString *arg = [NSString stringWithUTF8String: argv[i]];
@@ -52,7 +52,7 @@
 }
 
 - (NSString *) argAtIndex: (int) index {
-    return [arguments objectAtIndex: index];
+    return (int)[arguments count] > index ? [arguments objectAtIndex: index] : nil;
 }
 
 @end

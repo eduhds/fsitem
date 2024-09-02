@@ -25,9 +25,18 @@ int main(int argc, const char * argv[]) {
     if (!argsOk) {
         exit(1);
     }
+
+    NSString *argTargetName = [argparse argAtIndex: 0];
+
+    if (argTargetName == nil) {
+        printf("Target not specified. Please type file name:\n");
+        char input[256];
+        scanf("%255s", input);
+        argTargetName = [NSString stringWithUTF8String: input];
+    }
     
     Target *target = [[Target alloc] init];
-    [target setName: [argparse argAtIndex: 0]];
+    [target setName: argTargetName];
     
     SwitchConfig *switchConfig = [[SwitchConfig alloc] initWithTarget: target];
 
