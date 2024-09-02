@@ -1,7 +1,7 @@
 //
 //  screen_manager.h
 //
-//  Created by Eduardo Henrique da Silva on 16/08/24.
+//  Created by Eduardo Henrique on 16/08/24.
 //
 
 #ifndef screen_manager_h

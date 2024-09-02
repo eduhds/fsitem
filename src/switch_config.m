@@ -1,7 +1,7 @@
 //
 //  switch_config.m
 //
-//  Created by Eduardo Henrique da Silva on 16/08/24.
+//  Created by Eduardo Henrique on 16/08/24.
 //
 
 #import <Foundation/Foundation.h>
@@ -114,8 +114,6 @@
     NSString *from = [NSString stringWithFormat: @"%@/%@", CONFIG_DIR, itemToReplace];
     NSString *new = [NSString stringWithFormat: @"%@/!%@", CONFIG_DIR, itemToReplace];
     NSString *to = [NSString stringWithFormat: @"%@", targetName];
-    NSString *oldFrom = [NSString stringWithFormat: @"%@/%@", CONFIG_DIR, [target current]];
-    NSString *oldTo = [NSString stringWithFormat: @"%@/%@", CONFIG_DIR, [[target current] substringFromIndex: 1]];
 
     if ([[NSFileManager defaultManager] removeItemAtPath: to error: &lastError]) {
         // Removed target file
@@ -123,8 +121,13 @@
             // Created new target file
             if ([[NSFileManager defaultManager] moveItemAtPath: from toPath: new error: &lastError]) {
                 // Renamed new target item file
-                // Try rename old target item file
-                [[NSFileManager defaultManager] moveItemAtPath: oldFrom toPath: oldTo error: &lastError];
+                if ([target current] != nil) {
+                    // Try rename old target item file
+                    NSString *oldFrom = [NSString stringWithFormat: @"%@/%@", CONFIG_DIR, [target current]];
+                    NSString *oldTo = [NSString stringWithFormat: @"%@/%@", CONFIG_DIR, [[target current] substringFromIndex: 1]];
+
+                    [[NSFileManager defaultManager] moveItemAtPath: oldFrom toPath: oldTo error: &lastError];
+                }
                 [[self target] setCurrent: [@"!%@" stringByAppendingString: itemToReplace]];
                 return YES;
             }

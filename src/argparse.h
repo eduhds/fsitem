@@ -1,7 +1,7 @@
 //
 //  argparse.h
 //
-//  Created by Eduardo Henrique da Silva on 14/08/24.
+//  Created by Eduardo Henrique on 14/08/24.
 //
 
 #ifndef argparse_h

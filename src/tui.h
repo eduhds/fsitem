@@ -1,7 +1,7 @@
 //
 //  tui.h
 //
-//  Created by Eduardo Henrique da Silva on 09/08/24.
+//  Created by Eduardo Henrique on 09/08/24.
 //
 
 #ifndef tui_h
@@ -28,6 +28,8 @@
 
 + (NSString *) vertLine;
 + (NSString *) horizLine;
+
++ (NSString *) bidirectionalArrow;
 
 + (NSString *) sliceText: (NSString *) value limitedTo: (int) length;
 

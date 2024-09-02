@@ -1,7 +1,7 @@
 //
 //  screen_manager.m
 //
-//  Created by Eduardo Henrique da Silva on 16/08/24.
+//  Created by Eduardo Henrique on 16/08/24.
 //
 
 #import <Foundation/Foundation.h>
@@ -68,9 +68,9 @@
     int titleX = topX - ((int)[title length] + 2) / 2;
     int targetX = topX - 2 - (int)[[target name] length];
 
-    tb_printf(titleX, topY++, TB_GREEN, 0, " %s ", [[title uppercaseString] UTF8String]);
+    tb_printf(titleX, topY++, TB_GREEN, 0, " %s ", [title UTF8String]);
     tb_print(targetX, topY, 0, 0, [[target name] UTF8String]);
-    tb_print(topX - 2, topY++, 0, 0, " 🢐🢒 ");
+    tb_printf(topX - 2, topY++, 0, 0, " %s ", [[Tui bidirectionalArrow] UTF8String]);
     
     if ([target current] != nil) {
         NSString *current = [[[[target current] componentsSeparatedByString: @"|"] firstObject] substringFromIndex: 1];
@@ -177,7 +177,7 @@
     tb_print(bottomX, bottomY, 0, success ? TB_BLUE : TB_RED, [[Tui text:@" " maxWidth: (boxX - 1)] UTF8String]);
 
     if ([message length] > 0) {
-        tb_print(bottomX, bottomY, TB_WHITE, success ? TB_BLUE : TB_RED, [message UTF8String]);
+        tb_print(bottomX, bottomY, TB_WHITE, success ? TB_BLUE : TB_RED, [[Tui text: message maxWidth: boxW - 1] UTF8String]);
         [self setMessage: @""];
         [self setSuccess: YES];
     }

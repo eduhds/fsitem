@@ -1,7 +1,7 @@
 //
 //  tui.m
 //
-//  Created by Eduardo Henrique da Silva on 09/08/24.
+//  Created by Eduardo Henrique on 09/08/24.
 //
 
 #import "tui.h"
@@ -66,6 +66,10 @@
 
 + (NSString *) horizLine {
     return @"─";
+}
+
++ (NSString *) bidirectionalArrow {
+    return @"◀▶";
 }
 
 + (NSString *) sliceText: (NSString *) value limitedTo: (int) length {

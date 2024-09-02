@@ -12,8 +12,8 @@
 #import "switch_config.h"
 
 #define APP_NAME @"Switch-Config"
-#define APP_VERSION @"1.0.0"
-#define APP_DESCRIPTION @"Switch-Config"
+#define APP_VERSION @"0.0.2"
+#define APP_DESCRIPTION @"CLI tool to manage multiple configs for a file."
 
 int main(int argc, const char * argv[]) {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
@@ -65,7 +65,7 @@ int main(int argc, const char * argv[]) {
     tb_init();
 
     ScreenManager *sm = [[ScreenManager alloc] init];
-    [sm setTitle: APP_NAME];
+    [sm setTitle: [NSString stringWithFormat: @"%@ v%@", [APP_NAME uppercaseString], APP_VERSION]];
     [sm setWidth: tb_width()];
     [sm setHeight: tb_height()];
     [sm setTarget: target];

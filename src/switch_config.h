@@ -1,7 +1,7 @@
 //
 //  switch_config.h
 //
-//  Created by Eduardo Henrique da Silva on 16/08/24.
+//  Created by Eduardo Henrique on 16/08/24.
 //
 
 #ifndef switch_config_h
