@@ -29,6 +29,8 @@
 + (NSString *) vertLine;
 + (NSString *) horizLine;
 
++ (NSString *) sliceText: (NSString *) value limitedTo: (int) length;
+
 @end
 
 #endif /* tui_h */

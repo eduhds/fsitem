@@ -68,4 +68,14 @@
     return @"─";
 }
 
++ (NSString *) sliceText: (NSString *) value limitedTo: (int) length {
+    int valueLength = (int)[value length];
+
+    if (valueLength <= length) {
+        return value;
+    }
+
+    return [value substringFromIndex:(valueLength - length)];
+}
+
 @end

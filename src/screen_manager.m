@@ -78,44 +78,59 @@
 
     NSArray *targetItems = [target items];
     
-    if ([targetItems count] > 0) {
-        for (int i = 0; i < [targetItems count]; i++) {
-            NSString *item = [targetItems objectAtIndex: i];
-            item = [[item componentsSeparatedByString: @"|"] objectAtIndex: 0];
+    int maxLeftY = height - 6;
+    int maxLeftH = height - 10;
 
-            BOOL isCurrentItem = [item hasPrefix: @"!"];
-            if (isCurrentItem) {
-                item = [item substringFromIndex: 1];
-            }
-
-            NSString *brackets = [@"" stringByAppendingFormat: @"[%@] ", isCurrentItem ? selectedIndex == -1 ? @"✔" : @"*" : i == selectedIndex ? @"✔" : @" "];
+    if (maxLeftH >= 1) {
+        int itemsSize = (int)[targetItems count];
+        
+        if (itemsSize > 0) {
+            int start = focusIndex >= maxLeftH ? focusIndex - maxLeftH : 0;
             
-            item = [brackets stringByAppendingFormat: @"%@", item];
+            for (int i = start; i < itemsSize; i++) {
+                if (leftY > maxLeftY) {
+                    break;
+                }
 
-            if (isCurrentItem) {
-                item = [item stringByAppendingString: @" (current)"];
+                NSString *item = [targetItems objectAtIndex: i];
+                item = [[item componentsSeparatedByString: @"|"] objectAtIndex: 0];
+
+                BOOL isCurrentItem = [item hasPrefix: @"!"];
+                if (isCurrentItem) {
+                    item = [item substringFromIndex: 1];
+                }
+
+                NSString *brackets = [@"" stringByAppendingFormat: @"[%@] ", isCurrentItem ? selectedIndex == -1 ? @"✔" : @"*" : i == selectedIndex ? @"✔" : @" "];
+                
+                item = [brackets stringByAppendingFormat: @"%@", item];
+
+                if (isCurrentItem) {
+                    item = [item stringByAppendingString: @" (current)"];
+                }
+                
+                int focusY = leftY++;
+                if ([areaFocus intValue] == AREA_1 && i == focusIndex) {
+                    tb_printf(leftX, focusY, 0, TB_GREEN, "%s", [[Tui text: item maxWidth: focusW] UTF8String]);
+                    tb_print(focusW -2, focusY, 0, TB_GREEN, "▶");
+                } else {
+                    tb_printf(leftX, focusY, 0, 0, "%s", [[Tui text: item maxWidth: focusW] UTF8String]);
+                }
             }
-            
-            int focusY = leftY++;
-            if ([areaFocus intValue] == AREA_1 && i == focusIndex) {
-                tb_printf(leftX, focusY, 0, TB_GREEN, "%s", [[Tui text: item maxWidth: focusW] UTF8String]);
-                tb_print(focusW -2, focusY, 0, TB_GREEN, "▶");
-            } else {
-                tb_printf(leftX, focusY, 0, 0, "%s", [[Tui text: item maxWidth: focusW] UTF8String]);
-            }
+        } else {
+            tb_print(leftX, leftY++, 0, 0, [[Tui text:@"Nenhum item encontrado" maxWidth:focusW] UTF8String]);
         }
-    } else {
-        tb_print(leftX, leftY++, 0, 0, [[Tui text:@"Nenhum item encontrado" maxWidth:focusW] UTF8String]);
     }
 
+    NSString *inputValue = [Tui sliceText: typed limitedTo: leftW - 4];
+
     tb_print(leftX, height - 6, 0, 0, [[Tui line: leftW - 1] UTF8String]);
-    tb_printf(leftX, height - 5, 0, 0, "> %s", [typed UTF8String]);
+    tb_printf(leftX, height - 5, 0, 0, "> %s", [inputValue UTF8String]);
     tb_print(leftX, height - 4, 0, 0, [[Tui line: leftW - 1] UTF8String]);
     
     //tb_print(leftX, height - 2, 0, 0, [[Tui text:@"" maxWidth:leftW] UTF8String]);
 
     if ([areaFocus intValue] == AREA_2) {
-        tb_set_cursor((int)[typed length] + 3, height - 5);
+        tb_set_cursor((int)[inputValue length] + 3, height - 5);
     } else {
         tb_hide_cursor();
     }
