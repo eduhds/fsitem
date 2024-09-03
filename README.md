@@ -6,17 +6,23 @@
 
 CLI tool to manage multiple configs for a file.
 
+<p align="center">
+    <img src="./example.gif" style="display: block; margin: auto;" />
+</p>
+
 ## Install
 
-TODO
+Download executable from [releases](https://github.com/eduhds/switch-config/releases).
+
+> Tip: Consider using [gspm](https://github.com/eduhds/gspm) to download and install assets from GitHub releases!
 
 ## Usage
 
-TODO
+```sh
+switch-config <file>
+```
 
 ## Development
-
-TODO
 
 ### Build
 
