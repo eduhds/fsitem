@@ -173,7 +173,7 @@
     NSString *tips = @"<ESC> to exit <TAB> to move <SPACE> to select <ENTER> to confirm";
     
     tb_print(bottomX, bottomY, 0, TB_WHITE, [[Tui text:@" " maxWidth: (boxX - 1)] UTF8String]);
-    tb_print((width / 2) - ((int)[tips length] / 2), bottomY++, 0, TB_WHITE, [tips UTF8String]);
+    tb_print((width / 2) - ((int)[tips length] / 2), bottomY++, TB_BLACK, TB_WHITE, [tips UTF8String]);
     tb_print(bottomX, bottomY, 0, success ? TB_BLUE : TB_RED, [[Tui text:@" " maxWidth: (boxX - 1)] UTF8String]);
 
     if ([message length] > 0) {
@@ -220,8 +220,8 @@
             }
             
             if (y == endY - 2) {
-                tb_print(centerX - 11, y, TB_WHITE, alertCancelFocus ? TB_BLUE : TB_WHITE, [@" <Cancel> " UTF8String]);
-                tb_print(centerX + 1, y, TB_WHITE, alertCancelFocus ? TB_WHITE : TB_BLUE, [@" <Confirm> " UTF8String]);
+                tb_print(centerX - 11, y, alertCancelFocus ? TB_WHITE : TB_BLACK, alertCancelFocus ? TB_BLUE : TB_WHITE, [@" <Cancel> " UTF8String]);
+                tb_print(centerX + 1, y, alertCancelFocus ? TB_BLACK : TB_WHITE, alertCancelFocus ? TB_WHITE : TB_BLUE, [@" <Confirm> " UTF8String]);
             }
             
             tb_print(x + 1, endY, 0, TB_BLACK, "  "); // Border bottom
