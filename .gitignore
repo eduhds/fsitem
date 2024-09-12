@@ -13,3 +13,6 @@ appimage-build
 *.AppImage.zsync
 
 .vscode
+
+*.app
+
