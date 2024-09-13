@@ -20,6 +20,6 @@ RUN if [ "${REINSTALL_CMAKE_VERSION_FROM_SOURCE}" != "none" ]; then \
 
 RUN apt update -y && apt upgrade -y
 
-RUN apt install -y gnustep gnustep-devel fuse file
+RUN apt install -y gnustep gnustep-devel curl
 
 RUN curl -fsSL https://xmake.io/shget.text | bash
